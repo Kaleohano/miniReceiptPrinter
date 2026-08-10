@@ -1369,3 +1369,199 @@ body { background: var(--bg); }
   .typewriter-model .model-key.pressed,
   .typewriter-model .model-spacebar.pressed { transform: none; }
 }
+
+/* Pink flat-illustration typewriter, redrawn from the latest reference. */
+.typewriter-model {
+  width: min(620px, 92vw);
+  height: 540px;
+  filter: drop-shadow(10px 16px 0 rgba(95, 66, 66, .14));
+}
+
+.typewriter-model .model-paper {
+  z-index: 2;
+  top: 0;
+  left: 25%;
+  width: 50%;
+  height: 44%;
+  padding: 42px 42px;
+  border: 0;
+  border-radius: 12px 12px 2px 2px;
+  color: #3a3838;
+  background: linear-gradient(#fafcfc, #eef1f2);
+  box-shadow: 9px 9px 0 rgba(103, 77, 77, .13);
+}
+
+.typewriter-model .model-paper i {
+  height: 3px;
+  margin-top: 16px;
+  border-radius: 3px;
+  background: #444242;
+}
+
+.typewriter-model .model-carriage {
+  z-index: 1;
+  top: 38%;
+  left: 8%;
+  width: 84%;
+  grid-template-columns: 30px 1fr 30px;
+}
+
+.typewriter-model .carriage-rail {
+  height: 27px;
+  border: 3px solid #202322;
+  border-radius: 7px;
+  background: #343837;
+  box-shadow: none;
+}
+
+.typewriter-model .carriage-knob {
+  height: 31px;
+  border: 3px solid #1e2120;
+  border-radius: 7px;
+  background: #373b3a;
+}
+
+.typewriter-model .return-lever {
+  z-index: 2;
+  top: 34%;
+  left: 4%;
+  width: 112px;
+  height: 10px;
+  border: 0;
+  border-radius: 4px;
+  background: #343837;
+  transform: rotate(-23deg);
+}
+
+.typewriter-model .return-lever::before {
+  left: -10px;
+  top: -6px;
+  width: 26px;
+  height: 20px;
+  border: 0;
+  border-radius: 4px;
+  background: #242827;
+}
+
+.typewriter-model .ribbon-deck {
+  z-index: 5;
+  top: 43%;
+  left: 18%;
+  width: 64%;
+  height: 43px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: #ffd0d3;
+  box-shadow: inset 0 -6px 0 #f4a2a8;
+  clip-path: polygon(7% 0, 93% 0, 100% 100%, 0 100%);
+}
+
+.typewriter-model .ribbon-spool,
+.typewriter-model .type-guide { display: none; }
+
+.typewriter-model .model-shell {
+  z-index: 4;
+  left: 7%;
+  right: 7%;
+  bottom: 2%;
+  height: 53%;
+  padding: 91px 42px 25px;
+  border: 0;
+  border-radius: 32px 32px 12px 12px / 48px 48px 12px 12px;
+  background:
+    linear-gradient(#ff9ca3 0 18%, #ffd0d3 19% 34%, #ff9ca3 35% 85%, #df6268 86% 100%);
+  box-shadow: inset 0 5px 0 rgba(255,255,255,.2), 9px 11px 0 rgba(110, 75, 75, .15);
+  transform: none;
+}
+
+.typewriter-model .model-brand { display: none; }
+
+.typewriter-model .model-keyboard {
+  width: 100%;
+  gap: 7px;
+  padding: 12px 13px 17px;
+  border-radius: 8px 8px 11px 11px;
+  background: #161918;
+  box-shadow: inset 0 4px 0 #2d302f;
+  transform: perspective(520px) rotateX(9deg);
+}
+
+.typewriter-model .model-key-row { gap: 8px; }
+.typewriter-model .model-key-row.row-2 { transform: translateX(4px); }
+.typewriter-model .model-key-row.row-3 { transform: translateX(8px); }
+.typewriter-model .model-key-row.row-4 { transform: translateX(13px); }
+
+.typewriter-model .model-key {
+  position: relative;
+  z-index: 2;
+  width: 27px;
+  height: 16px;
+  border: 0;
+  border-radius: 4px;
+  color: transparent;
+  background: linear-gradient(#f9f9f7 0 64%, #cfd1d0 65% 100%);
+  box-shadow: 0 3px 0 #9b9d9c;
+  font-size: 0;
+}
+
+.typewriter-model .model-key::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 12px;
+  width: 3px;
+  height: 18px;
+  background: #424544;
+  transform: translateX(-50%);
+}
+
+.typewriter-model .model-spacebar {
+  left: 29%;
+  bottom: 15px;
+  width: 42%;
+  height: 22px;
+  border: 0;
+  border-radius: 2px;
+  background: linear-gradient(#ff9ca3 0 55%, #df6268 56% 100%);
+  box-shadow: 0 4px 0 #b4484d;
+}
+
+.typewriter-model .machine-foot {
+  bottom: -8px;
+  width: 60px;
+  height: 10px;
+  border: 0;
+  border-radius: 0 0 6px 6px;
+  background: #c85056;
+}
+
+.typewriter-model .model-key.pressed {
+  background: #ffffff;
+  transform: translateY(8px) scale(.96);
+  box-shadow: 0 0 0 #9b9d9c;
+}
+
+.typewriter-model .model-spacebar.pressed {
+  transform: translateY(7px) scale(.98);
+  box-shadow: 0 0 0 #b4484d;
+}
+
+.hero-typewriter {
+  width: min(680px, 58vw);
+  height: min(560px, calc(100dvh - 105px));
+}
+
+@media (max-height: 760px) and (min-width: 768px) {
+  .hero-typewriter { width: min(570px, 49vw); height: 495px; }
+}
+
+@media (max-width: 767px) {
+  .typewriter.typewriter-model { width: min(510px, 96vw); height: 455px; }
+  .typewriter-model .model-shell { left: 2%; right: 2%; padding: 80px 18px 22px; }
+  .typewriter-model .model-keyboard { gap: 6px; padding-inline: 8px; }
+  .typewriter-model .model-key-row { gap: 4px; }
+  .typewriter-model .model-key { width: 23px; height: 15px; }
+  .typewriter-model .return-lever { width: 82px; }
+}
