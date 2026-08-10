@@ -556,6 +556,7 @@ body {
 
 .polaroid-card { transition-duration: .72s; }
 .polaroid-wrap:hover .polaroid-card { transform: rotate(-1.2deg) translateY(-5px); }
+
 .polaroid-face {
   overflow: visible;
   border: 2.5px solid #292b28;
@@ -2243,3 +2244,43 @@ body {
 .drawn-rear-button.button-two { background: var(--accent); }
 
 .polaroid-wrap:hover .polaroid-card { transform: rotate(-1.2deg) translateY(-5px); }
+
+/* Pink journal linework: fine rose outlines on pale paper with restrained fills. */
+:root {
+  --sketch-line: #c95e73;
+  --sketch-paper: #fffdf8;
+  --sketch-shadow: rgba(201, 94, 115, .12);
+}
+
+.typewriter-model .model-paper { border-width: 1.5px; background: #fffdf8; box-shadow: 3px 4px 0 rgba(201,94,115,.09); }
+.typewriter-model .model-paper i { background: #c95e73; }
+.typewriter-model .carriage-rail,
+.typewriter-model .carriage-knob,
+.typewriter-model .return-lever,
+.typewriter-model .return-lever::before { border-color: #c95e73; background: #fff8f6; box-shadow: none; }
+.typewriter-model .ribbon-deck { border: 1.5px solid #c95e73; background: #fff4f3; box-shadow: 2px 3px 0 rgba(201,94,115,.08); }
+.typewriter-model .model-shell { border: 1.75px solid #c95e73; background: #fff8f5; box-shadow: 3px 4px 0 rgba(201,94,115,.1); }
+.typewriter-model .model-keyboard { border: 1.5px solid #c95e73; background: #fffdf8; box-shadow: none; }
+.typewriter-model .model-key { border: 1.25px solid #c95e73; color: #a53f55; background: transparent; box-shadow: 0 2px 0 rgba(201,94,115,.3); }
+.typewriter-model .model-key::after { background: #c95e73; }
+.typewriter-model .model-spacebar { border: 1.5px solid #c95e73; background: #fff0f0; box-shadow: 0 2px 0 rgba(201,94,115,.28); }
+.typewriter-model .model-key.pressed { color: #98384d; background: #f8ced4; box-shadow: none; }
+.typewriter-model .machine-foot { border: 1.5px solid #c95e73; background: #f5c4cc; }
+
+.drawn-camera-body,
+.drawn-camera-bump { border: 1.75px solid #c95e73; background: #fff8f5; box-shadow: 3px 4px 0 rgba(201,94,115,.1); }
+.drawn-flash { border: 1.5px solid #c95e73; background: repeating-linear-gradient(90deg,#fffdf8 0 7px,#f8dfe2 8px 9px); box-shadow: none; }
+.drawn-viewfinder { border: 1.5px solid #c95e73; background: #f8d4da; box-shadow: none; }
+.drawn-lens { border: 1.75px solid #c95e73; background: #fffdf8; box-shadow: inset 0 0 0 6px #f7d6dc; }
+.drawn-lens i { border: 1.5px solid #c95e73; background: #d98a99; }
+.drawn-shutter,
+.drawn-slot,
+.drawn-rear-eye,
+.drawn-rear-button { border-color: #c95e73; box-shadow: none; }
+.drawn-shutter { background: #f2b8c1; }
+.drawn-slot { background: #f4c6cd; }
+.drawn-brand { color: #b94a61; }
+.drawn-rear-screen { border: 1.75px solid #c95e73; background: #fffdf8; box-shadow: inset 0 0 0 3px #f7d9de; }
+.drawn-rear-eye { background: #f0b4bf; }
+.drawn-rear-button { background: #fffdf8; }
+.drawn-rear-button.button-two { background: #f1b6c0; }
