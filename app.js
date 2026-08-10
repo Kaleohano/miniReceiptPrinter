@@ -26,17 +26,19 @@ const state = {
   date: new Date(), objectUrl: null
 };
 
-const keyRows = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
-keyRows.forEach((row, rowIndex) => {
-  const keyRow = document.createElement('div');
-  keyRow.className = `model-key-row row-${rowIndex + 1}`;
-  [...row].forEach(letter => {
-    const key = document.createElement('span');
-    key.className = 'model-key';
-    key.textContent = letter;
-    keyRow.appendChild(key);
+const keyRows = ['1234567890', 'QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
+document.querySelectorAll('.model-keyboard').forEach(keyboard => {
+  keyRows.forEach((row, rowIndex) => {
+    const keyRow = document.createElement('div');
+    keyRow.className = `model-key-row row-${rowIndex + 1}`;
+    [...row].forEach(letter => {
+      const key = document.createElement('span');
+      key.className = 'model-key';
+      key.textContent = letter;
+      keyRow.appendChild(key);
+    });
+    keyboard.appendChild(keyRow);
   });
-  els.keyboard.appendChild(keyRow);
 });
 
 function detectDevice() {

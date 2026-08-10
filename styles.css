@@ -896,7 +896,7 @@ body {
 .typewriter {
   width: min(500px, 88vw);
   height: min(620px, 76dvh);
-  background: url("assets/typewriter-olive-cutout.png") center / contain no-repeat;
+  background: none;
 }
 .typewriter::after, .typewriter-bar, .typewriter-body { display: none; }
 .typewriter-paper {
@@ -1148,4 +1148,224 @@ body { background: var(--bg); }
     background: #f1edc8;
     transform: none;
   }
+}
+
+/* Refined shared typewriter: the same model is used in the hero and printing flow. */
+.typewriter-model {
+  position: relative;
+  isolation: isolate;
+  width: min(620px, 92vw);
+  height: 570px;
+  min-height: 0;
+  perspective: 1100px;
+  filter: drop-shadow(0 26px 22px rgba(62, 52, 32, .16));
+}
+
+.typewriter-model .model-paper {
+  top: 1%;
+  left: 23%;
+  width: 54%;
+  height: 49%;
+  padding: 32px 30px;
+  border: 1px solid #d9cfb5;
+  background:
+    linear-gradient(90deg, transparent 0 96%, rgba(118, 99, 65, .05)),
+    #fbf4df;
+  box-shadow: inset 0 0 34px rgba(118, 99, 65, .07), 0 2px 0 rgba(53, 57, 42, .12);
+}
+
+.typewriter-model .model-carriage {
+  top: 46%;
+  left: 5%;
+  width: 90%;
+  grid-template-columns: 30px 1fr 30px;
+}
+
+.typewriter-model .carriage-rail {
+  height: 20px;
+  border-color: #30372b;
+  background: linear-gradient(#778160, #59634a);
+  box-shadow: inset 0 3px 0 rgba(255,255,255,.14), 0 3px 0 rgba(43,48,37,.18);
+}
+
+.typewriter-model .carriage-knob {
+  height: 30px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #343a2e, #59604b 48%, #30362b);
+}
+
+.return-lever {
+  position: absolute;
+  z-index: 2;
+  top: 45%;
+  left: 3%;
+  width: 112px;
+  height: 8px;
+  border: 2px solid #33382d;
+  border-radius: 6px;
+  background: #727a5e;
+  transform: rotate(-12deg);
+  transform-origin: right center;
+}
+
+.return-lever::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: -7px;
+  width: 22px;
+  height: 17px;
+  border: 2px solid #33382d;
+  border-radius: 8px 3px 3px 8px;
+  background: #48503e;
+}
+
+.ribbon-deck {
+  position: absolute;
+  z-index: 3;
+  top: 49%;
+  left: 16%;
+  width: 68%;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 38px;
+  border: 2px solid #33392d;
+  border-radius: 38px 38px 16px 16px;
+  background: linear-gradient(160deg, #76805f, #59634b);
+  box-shadow: inset 0 4px 0 rgba(255,255,255,.1);
+}
+
+.ribbon-spool {
+  width: 46px;
+  height: 46px;
+  border: 5px double #2f342a;
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle, #353a2e 0 3px, #535b47 4px 7px);
+  box-shadow: 0 0 0 3px rgba(224, 219, 183, .15);
+}
+
+.type-guide {
+  position: relative;
+  width: 32px;
+  height: 42px;
+  border: 3px solid #2d3328;
+  border-bottom-width: 8px;
+  border-radius: 14px 14px 5px 5px;
+  background: #4b5340;
+}
+
+.type-guide::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: 3px;
+  height: 28px;
+  background: #2d3328;
+  transform: translateX(-50%);
+}
+
+.typewriter-model .model-shell {
+  left: 7%;
+  right: 7%;
+  bottom: 2%;
+  height: 47%;
+  padding: 78px 48px 27px;
+  border: 2px solid #30372b;
+  border-radius: 46px 46px 25px 25px / 34px 34px 20px 20px;
+  background:
+    linear-gradient(173deg, rgba(255,255,255,.13) 0 12%, transparent 13%),
+    linear-gradient(145deg, #7f8966 0 24%, #667151 25% 72%, #586249 73%);
+  box-shadow:
+    inset 0 5px 0 rgba(255,255,255,.11),
+    inset 0 -8px 0 rgba(39,45,33,.19),
+    0 3px 0 #3c4335;
+}
+
+.typewriter-model .model-brand {
+  top: 47px;
+  padding: 2px 10px 1px;
+  border-color: #3a4032;
+  color: #eee8c6;
+  background: rgba(55, 62, 46, .2);
+  font-size: 10px;
+}
+
+.typewriter-model .model-keyboard { gap: 5px; transform: perspective(520px) rotateX(17deg); }
+.typewriter-model .model-key-row { gap: 6px; }
+.typewriter-model .model-key-row.row-2 { transform: translateX(0); }
+.typewriter-model .model-key-row.row-3 { transform: translateX(4px); }
+.typewriter-model .model-key-row.row-4 { transform: translateX(9px); }
+
+.typewriter-model .model-key,
+.typewriter-model .model-spacebar {
+  width: 28px;
+  height: 21px;
+  border: 1px solid #373c30;
+  border-radius: 7px 7px 5px 5px;
+  color: #34372c;
+  background: linear-gradient(#eee9c8, #cbc6a3);
+  box-shadow: 0 4px 0 #3b4133, inset 0 2px 0 rgba(255,255,255,.65);
+  font-size: 9px;
+}
+
+.typewriter-model .model-spacebar {
+  left: 32%;
+  bottom: 13px;
+  width: 36%;
+  height: 16px;
+}
+
+.machine-foot {
+  position: absolute;
+  bottom: -10px;
+  width: 55px;
+  height: 13px;
+  border: 2px solid #30362b;
+  border-radius: 3px 3px 10px 10px;
+  background: #42493a;
+}
+.machine-foot.foot-left { left: 10%; }
+.machine-foot.foot-right { right: 10%; }
+
+.hero-typewriter {
+  z-index: 1;
+  width: min(680px, 58vw);
+  height: min(590px, calc(100dvh - 110px));
+  min-height: 520px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .desktop-scene { padding-top: 78px; }
+  .desktop-scene > .upload-only-button { top: 238px; }
+}
+
+@media (max-height: 760px) and (min-width: 768px) {
+  .hero-typewriter { width: min(560px, 48vw); height: 510px; min-height: 0; }
+  .desktop-scene > .upload-only-button { top: 202px; }
+}
+
+@media (max-width: 767px) {
+  .typewriter.typewriter-model { width: min(520px, 96vw); height: 480px; min-height: 0; }
+  .typewriter-model .model-shell { left: 2%; right: 2%; height: 46%; padding: 73px 18px 24px; }
+  .typewriter-model .model-key-row { gap: 3px; }
+  .typewriter-model .model-key { width: 23px; height: 19px; font-size: 8px; }
+  .typewriter-model .ribbon-deck { left: 10%; width: 80%; padding-inline: 30px; }
+  .typewriter-model .return-lever { left: 0; width: 80px; }
+}
+
+.typewriter-model .model-key.pressed,
+.typewriter-model .model-spacebar.pressed {
+  color: #25281f;
+  background: #f5f0ca;
+  transform: translateY(8px) rotateX(13deg) scale(.94);
+  box-shadow: 0 0 0 #3b4133, inset 0 2px 4px rgba(46, 49, 37, .28);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typewriter-model .model-key.pressed,
+  .typewriter-model .model-spacebar.pressed { transform: none; }
 }
