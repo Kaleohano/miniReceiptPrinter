@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#f8f7f2" />
+    <meta name="theme-color" content="#f2f1eb" />
     <meta name="description" content="把一张照片打印成一份属于今天的电子小票。" />
     <title>今日小票</title>
     <link rel="stylesheet" href="styles.css" />
@@ -52,17 +52,9 @@
         </section>
 
         <section class="device-scene desktop-scene" id="desktopScene" hidden>
-          <div class="printer" aria-hidden="true">
-            <div class="printer-top"><span></span></div>
-            <div class="printer-body">
-              <div class="printer-slot"></div>
-              <div class="printer-button"></div>
-            </div>
-            <div class="blank-paper">
-              <span>等待一张照片</span>
-              <i></i><i></i><i></i>
-            </div>
-          </div>
+          <figure class="zine-printer-figure" aria-hidden="true">
+            <img class="zine-printer-art" src="assets/receipt-printer-zine.jpg" alt="" width="971" height="1632" />
+          </figure>
           <button class="primary-button" id="desktopUploadButton" type="button">上传照片</button>
           <p class="support-text">支持 JPG、PNG、WEBP，也可以直接拖到这里</p>
         </section>
