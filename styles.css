@@ -552,3 +552,155 @@ body {
 @media (max-width: 767px) {
   .zine-printer-figure { width: min(340px, 90vw); height: 390px; }
 }
+
+/* 1970s catalog revision: graphic-led layout in olive, tobacco and paper. */
+:root {
+  --bg: #d8d0b8;
+  --surface: #c9c0a3;
+  --ink: #342d22;
+  --muted: #675d49;
+  --line: rgba(52, 45, 34, .58);
+  --accent: #4f5a35;
+  --accent-ink: #f2ead6;
+  --paper: #eee4cc;
+  --machine: #4f5a35;
+  --machine-light: #6c7450;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #29261d;
+    --surface: #393526;
+    --ink: #eee6d2;
+    --muted: #c3b99d;
+    --line: rgba(238, 230, 210, .55);
+    --accent: #9da77a;
+    --accent-ink: #242219;
+    --paper: #d9cfb5;
+    --machine: #626b45;
+    --machine-light: #7c835b;
+  }
+}
+
+body {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 8% 18%, rgba(91,74,45,.07), transparent 24%),
+    radial-gradient(circle at 88% 80%, rgba(74,82,49,.09), transparent 28%);
+}
+
+.grain { opacity: .06; }
+.app-shell { width: min(1500px, 100%); }
+
+.topbar::after { background: var(--ink); }
+.wordmark { font-family: Georgia, "Times New Roman", serif; font-size: 18px; letter-spacing: -.015em; }
+.wordmark-mark { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); border-radius: 2px; transform: rotate(-2deg); }
+.icon-button { border-radius: 2px; box-shadow: 3px 3px 0 rgba(52,45,34,.18); }
+
+.stage {
+  grid-template-columns: minmax(260px, .55fr) minmax(540px, 1.45fr);
+  gap: 2vw;
+  padding-top: 24px;
+}
+
+.intro-copy { max-width: 390px; align-self: end; padding-bottom: 72px; position: relative; z-index: 3; }
+.eyebrow { color: var(--ink); font: 700 11px/1.2 "Courier New", monospace; letter-spacing: .18em; }
+.eyebrow::after { border-color: var(--accent); }
+.intro-copy h1 {
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(54px, 6vw, 92px);
+  font-weight: 500;
+  line-height: .86;
+  letter-spacing: -.065em;
+  transform: none;
+}
+.intro-copy > p:last-child { max-width: 330px; margin-top: 30px; color: var(--muted); font-size: 14px; }
+
+.desktop-scene { position: relative; min-height: 620px; }
+.typewriter-hero {
+  width: min(590px, 54vw);
+  aspect-ratio: 4 / 5;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(52,45,34,.28);
+  background: #cfc3a6;
+  box-shadow: 12px 14px 0 rgba(78,70,48,.12);
+  transform: rotate(.5deg);
+}
+.typewriter-hero-art { width: 100%; height: 100%; display: block; object-fit: cover; }
+.desktop-scene > .primary-button {
+  position: absolute;
+  z-index: 2;
+  top: 190px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1deg);
+}
+.desktop-scene > .primary-button:hover { transform: translate(-50%, -2px) rotate(-1deg); }
+.desktop-scene > .support-text { position: absolute; z-index: 2; top: 246px; left: 50%; width: 280px; margin: 0; transform: translateX(-50%); color: #695f4a; text-align: center; }
+
+.primary-button, .secondary-button {
+  border-radius: 2px;
+  border-color: var(--ink);
+  box-shadow: 4px 4px 0 rgba(52,45,34,.22);
+  font-family: "Courier New", monospace;
+  letter-spacing: .04em;
+}
+.primary-button { background: var(--accent); border-color: var(--accent); }
+.secondary-button { background: var(--bg); }
+
+.polaroid-wrap { width: min(410px, 90vw); height: 500px; aspect-ratio: auto; }
+.polaroid-face { overflow: visible; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.polaroid-face::before, .polaroid-front::after { display: none; }
+.polaroid-reference { width: 100%; height: calc(100% - 35px); display: block; object-fit: contain; filter: sepia(.18) saturate(.72) contrast(.96); }
+.polaroid-front .polaroid-reference { transform: scale(1.24); }
+.polaroid-reference-back { padding: 4px 18px 0; }
+.camera-caption { bottom: 2px; color: var(--ink); font: 12px/1.2 "Courier New", monospace; letter-spacing: .04em; }
+
+.camera-panel { background: var(--bg); border-color: var(--ink); }
+.round-control { color: var(--ink); border-radius: 2px; }
+.live-view { border-color: var(--ink); }
+.gallery-button { color: var(--ink); }
+
+.typewriter {
+  width: min(500px, 88vw);
+  height: min(620px, 76dvh);
+  background: url("assets/typewriter-olive.jpg") center / contain no-repeat;
+}
+.typewriter::after, .typewriter-bar, .typewriter-body { display: none; }
+.typewriter-paper {
+  left: 24%;
+  top: 8%;
+  width: 52%;
+  height: 34%;
+  padding: 34px 18px;
+  border: 0;
+  color: #4e4637;
+  background: transparent;
+  box-shadow: none;
+}
+.typewriter-paper i { background: #756b55; }
+.printing-status { margin-top: -26px; }
+
+.receipt-slot { background: var(--machine); border-color: var(--ink); }
+.receipt-machine { filter: sepia(.12); }
+.toast { background: var(--accent); color: var(--accent-ink); border-color: var(--ink); border-radius: 2px; }
+
+@media (max-width: 767px) {
+  .stage { display: flex; padding-top: 18px; }
+  .intro-copy { align-self: stretch; max-width: none; padding-bottom: 0; }
+  .intro-copy h1 { font-size: clamp(54px, 16vw, 72px); line-height: .86; }
+  .intro-copy > p:last-child { margin-top: 20px; }
+  .device-scene { margin-top: 8px; }
+  .polaroid-wrap { width: min(345px, 91vw); height: 405px; }
+  .polaroid-reference { height: calc(100% - 30px); }
+  .typewriter { height: 510px; }
+  .typewriter-paper { padding-top: 26px; }
+}
+
+@media (max-height: 760px) and (min-width: 768px) {
+  .desktop-scene { min-height: 560px; }
+  .typewriter-hero { width: min(510px, 49vw); }
+  .desktop-scene > .primary-button { top: 162px; }
+  .desktop-scene > .support-text { top: 218px; }
+}

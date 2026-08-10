@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#f2f1eb" />
+    <meta name="theme-color" content="#d8d0b8" />
     <meta name="description" content="把一张照片打印成一份属于今天的电子小票。" />
-    <title>今日小票</title>
+    <title>Today's Receipt</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -13,8 +13,8 @@
     <main class="app-shell">
       <header class="topbar">
         <button class="wordmark" id="homeButton" type="button" aria-label="返回首页">
-          <span class="wordmark-mark">日</span>
-          <span>今日小票</span>
+          <span class="wordmark-mark">T</span>
+          <span>Today's Receipt</span>
         </button>
         <div class="top-actions">
           <span class="device-label" id="deviceLabel">正在识别设备</span>
@@ -26,34 +26,29 @@
 
       <section class="stage" id="stage" aria-live="polite">
         <div class="intro-copy" id="introCopy">
-          <p class="eyebrow">留住今天的一小块</p>
-          <h1>把照片，打印成<br />一张今日小票。</h1>
-          <p>拍一张或选一张照片，我们会把时间、地点、天气和一句话一起收好。</p>
+          <p class="eyebrow">PRINT A MEMORY</p>
+          <h1>Today's<br />Receipt</h1>
+          <p>放进一张照片，留下今天的时间、地点、天气和一句话。</p>
         </div>
 
         <section class="device-scene mobile-scene" id="mobileScene" hidden>
           <button class="polaroid-wrap" id="polaroidButton" type="button" aria-label="打开宝丽莱相机">
             <span class="polaroid-card">
               <span class="polaroid-face polaroid-front">
-                <span class="camera-brand">DAYPRINT</span>
-                <span class="flash"></span>
-                <span class="lens"><span></span></span>
-                <span class="view-dot"></span>
-                <span class="camera-stripe"></span>
+                <img class="polaroid-reference" src="assets/polaroid-front.png" alt="" width="1000" height="1000" />
                 <span class="camera-caption">轻触相机开始</span>
               </span>
               <span class="polaroid-face polaroid-back">
-                <span class="camera-brand">DAYPRINT</span>
-                <span class="viewfinder"><span>准备取景</span></span>
-                <span class="back-controls"><i></i><i></i><i></i></span>
+                <img class="polaroid-reference polaroid-reference-back" src="assets/polaroid-back.png" alt="" width="868" height="1124" />
+                <span class="camera-caption">正在打开取景框</span>
               </span>
             </span>
           </button>
         </section>
 
         <section class="device-scene desktop-scene" id="desktopScene" hidden>
-          <figure class="zine-printer-figure" aria-hidden="true">
-            <img class="zine-printer-art" src="assets/receipt-printer-zine.jpg" alt="" width="971" height="1632" />
+          <figure class="typewriter-hero" aria-hidden="true">
+            <img class="typewriter-hero-art" src="assets/typewriter-olive.jpg" alt="" width="1024" height="1280" />
           </figure>
           <button class="primary-button" id="desktopUploadButton" type="button">上传照片</button>
           <p class="support-text">支持 JPG、PNG、WEBP，也可以直接拖到这里</p>
