@@ -1895,3 +1895,174 @@ body {
 @media (max-width: 380px) {
   .drawn-camera { transform: scale(.94); transform-origin: center top; }
 }
+
+/* C4D-inspired product materials: soft bevels, studio light and ambient occlusion. */
+:root {
+  --bg: #d7edf0;
+  --surface: #c5e2e6;
+  --display: #a95762;
+  --accent: #a94f5b;
+  --machine: #d9828b;
+  --machine-light: #edb2b7;
+}
+
+.typewriter-model {
+  filter: drop-shadow(0 26px 24px rgba(66, 76, 78, .2));
+}
+
+.typewriter-model .model-paper {
+  border: 1px solid rgba(255,255,255,.75);
+  background: linear-gradient(155deg, #ffffff, #edf1f1 68%, #dfe5e5);
+  box-shadow: 0 16px 30px rgba(54, 66, 68, .13), inset 0 1px 0 #fff;
+}
+
+.typewriter-model .model-carriage { filter: drop-shadow(0 5px 5px rgba(38, 44, 45, .25)); }
+.typewriter-model .carriage-rail,
+.typewriter-model .carriage-knob {
+  border: 0;
+  background: linear-gradient(180deg, #697273 0, #303738 48%, #161b1c 52%, #404849 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,.35), inset 0 -2px 2px rgba(0,0,0,.35);
+}
+
+.typewriter-model .return-lever {
+  border: 0;
+  background: linear-gradient(#71797a, #242a2b 58%, #4d5556);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,.3), 0 5px 7px rgba(38,44,45,.25);
+}
+.typewriter-model .return-lever::before {
+  border: 0;
+  background: linear-gradient(145deg, #525a5b, #1f2526);
+  box-shadow: inset 1px 2px 1px rgba(255,255,255,.22);
+}
+
+.typewriter-model .ribbon-deck {
+  border: 0;
+  background: linear-gradient(165deg, #efbbc0 0 45%, #c96d77 46% 100%);
+  box-shadow: inset 0 4px 3px rgba(255,255,255,.45), 0 7px 12px rgba(87,57,61,.2);
+}
+
+.typewriter-model .model-shell {
+  border: 0;
+  background:
+    radial-gradient(circle at 24% 8%, rgba(255,255,255,.55), transparent 20%),
+    linear-gradient(155deg, #efb3b8 0 18%, #d9828b 40% 74%, #b95561 100%);
+  box-shadow:
+    inset 0 5px 4px rgba(255,255,255,.38),
+    inset 0 -8px 12px rgba(110,45,54,.18),
+    0 18px 30px rgba(72,57,60,.2);
+}
+
+.typewriter-model .model-keyboard {
+  border: 1px solid rgba(255,255,255,.08);
+  background: linear-gradient(165deg, #42494a, #181d1e 70%);
+  box-shadow: inset 0 10px 16px rgba(0,0,0,.52), 0 2px 0 rgba(255,255,255,.22);
+}
+
+.typewriter-model .model-key {
+  border: 0;
+  color: #e8e2d7;
+  background: linear-gradient(145deg, #555d5e 0 18%, #303637 55%, #171c1d 100%);
+  box-shadow:
+    0 5px 5px rgba(0,0,0,.46),
+    inset 1px 2px 1px rgba(255,255,255,.22),
+    inset -1px -2px 2px rgba(0,0,0,.45);
+  font: 700 8px/1 "Avenir Next", sans-serif;
+  text-shadow: 0 1px 1px #111;
+}
+
+.typewriter-model .model-key::after {
+  background: linear-gradient(90deg, #161b1c, #4c5354 50%, #171c1d);
+}
+
+.typewriter-model .model-spacebar {
+  background: linear-gradient(180deg, #f0a6ad, #c85f6b 62%, #9f414c);
+  box-shadow: 0 6px 8px rgba(81,34,40,.38), inset 0 3px 2px rgba(255,255,255,.4);
+}
+
+.typewriter-model .model-key.pressed {
+  color: #fff8eb;
+  background: linear-gradient(145deg, #697172, #252b2c);
+  box-shadow: inset 0 3px 5px rgba(0,0,0,.5);
+}
+
+.typewriter-model .machine-foot {
+  background: linear-gradient(#7e3d45, #472126);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.2);
+}
+
+.drawn-camera {
+  filter: drop-shadow(0 24px 22px rgba(62, 77, 80, .22));
+}
+
+.drawn-camera-body,
+.drawn-camera-bump {
+  border: 0;
+  background:
+    radial-gradient(circle at 25% 12%, rgba(255,255,255,.58), transparent 22%),
+    linear-gradient(150deg, #efb9be 0 22%, #da858e 58%, #b85662 100%);
+  box-shadow:
+    inset 0 5px 5px rgba(255,255,255,.38),
+    inset 0 -7px 10px rgba(103,42,51,.16),
+    0 14px 28px rgba(66,55,58,.18);
+}
+
+.drawn-camera-body { border-radius: 30px 30px 20px 20px; }
+.drawn-camera-bump { border-radius: 22px 22px 4px 4px; }
+
+.drawn-flash {
+  border: 6px solid #aab3b4;
+  background: repeating-linear-gradient(90deg, #fff 0 6px, #dbe3e4 7px 9px);
+  box-shadow: inset 0 0 8px rgba(255,255,255,.85), 0 5px 8px rgba(51,61,62,.24);
+}
+
+.drawn-viewfinder {
+  border: 5px solid #555d5e;
+  background: linear-gradient(145deg, #8a9899 0 10%, #263031 42%, #101617 100%);
+  box-shadow: inset 0 0 9px rgba(0,0,0,.65), 0 4px 7px rgba(50,57,58,.25);
+}
+
+.drawn-lens {
+  border: 0;
+  background: linear-gradient(145deg, #dbe2e2 0 12%, #6e797a 35%, #252c2d 70%);
+  box-shadow:
+    0 10px 14px rgba(51,40,43,.32),
+    inset 5px 7px 5px rgba(255,255,255,.45),
+    inset -6px -8px 8px rgba(0,0,0,.45);
+}
+
+.drawn-lens i {
+  border: 4px solid #222a2b;
+  background:
+    radial-gradient(circle at 33% 27%, rgba(255,255,255,.92) 0 3%, #75bcc5 5%, #28575d 16%, #111a1b 50%, #050909 100%);
+  box-shadow: inset 0 0 18px #020505, 0 0 0 5px #4b5455;
+}
+
+.drawn-shutter {
+  border: 0;
+  background: linear-gradient(145deg, #dc737e, #923a45);
+  box-shadow: inset 2px 3px 2px rgba(255,255,255,.4), 0 5px 8px rgba(77,34,40,.34);
+}
+
+.drawn-slot {
+  border: 0;
+  background: linear-gradient(#151a1b, #3c4445);
+  box-shadow: inset 0 4px 5px rgba(0,0,0,.68), 0 1px 0 rgba(255,255,255,.25);
+}
+
+.drawn-brand { color: #783740; text-shadow: 0 1px 0 rgba(255,255,255,.28); }
+
+.drawn-rear-screen {
+  border: 7px solid #4a5253;
+  background: linear-gradient(145deg, #314143, #0d1314);
+  box-shadow: inset 0 0 16px rgba(0,0,0,.75), 0 7px 10px rgba(59,42,46,.25);
+}
+
+.drawn-rear-eye,
+.drawn-rear-button {
+  border: 0;
+  box-shadow: inset 2px 3px 2px rgba(255,255,255,.3), 0 4px 7px rgba(64,44,48,.28);
+}
+
+.drawn-rear-eye { background: linear-gradient(145deg, #566263, #171e1f); }
+.drawn-rear-button { background: linear-gradient(145deg, #f7f7f2, #abb4b4); }
+.drawn-rear-button.button-two { background: linear-gradient(145deg, #d96f7a, #963b46); }
