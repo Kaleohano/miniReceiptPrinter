@@ -1614,3 +1614,100 @@ body {
 .receipt-slot { background: var(--machine); }
 .receipt-paper { background: var(--paper); }
 .toast { background: var(--accent); color: var(--accent-ink); }
+
+/* Focused refinement: clearer hierarchy, stronger affordance, one shape language. */
+:root {
+  --display: #bd5e68;
+  --accent: #b74450;
+  --accent-ink: #fffafa;
+  --control-radius: 999px;
+  --surface-radius: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --display: #f09aa1;
+    --accent: #f09aa1;
+    --accent-ink: #342629;
+  }
+}
+
+.intro-copy h1 {
+  color: var(--display);
+  font-family: "Avenir Next", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;
+  font-weight: 650;
+}
+
+.primary-button,
+.secondary-button {
+  border-radius: var(--control-radius);
+  box-shadow: none;
+}
+
+.primary-button {
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.primary-button:active,
+.secondary-button:active { transform: translateY(1px) scale(.98); }
+
+.preview-photo-wrap,
+.camera-panel { border-radius: var(--surface-radius); }
+
+.receipt-paper { border-radius: 2px; }
+
+@media (min-width: 768px) {
+  .intro-copy { inset-block-start: 38px; }
+  .intro-copy h1 {
+    font-size: clamp(74px, 10.3vw, 142px);
+    line-height: .84;
+    letter-spacing: -.072em;
+  }
+
+  .desktop-scene { padding-top: 104px; }
+  .hero-typewriter { height: min(548px, calc(100dvh - 122px)); }
+
+  .desktop-scene > .upload-only-button {
+    top: 224px;
+    background: var(--accent);
+    box-shadow: 0 8px 18px rgba(112, 53, 61, .18);
+  }
+
+  .desktop-scene > .upload-only-button::after {
+    content: "放入照片";
+    position: absolute;
+    top: calc(100% + 13px);
+    left: 50%;
+    width: max-content;
+    color: var(--ink);
+    font: 700 12px/1 "Avenir Next", sans-serif;
+    letter-spacing: .08em;
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-height: 760px) and (min-width: 768px) {
+  .intro-copy { inset-block-start: 24px; }
+  .intro-copy h1 { font-size: clamp(68px, 9.2vw, 118px); }
+  .desktop-scene { padding-top: 86px; }
+  .desktop-scene > .upload-only-button { top: 196px; }
+}
+
+@media (max-width: 767px) {
+  .intro-copy h1 {
+    font-family: "Avenir Next", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;
+    font-size: clamp(48px, 14vw, 62px);
+    font-weight: 650;
+    line-height: .92;
+    letter-spacing: -.06em;
+  }
+
+  .primary-button,
+  .secondary-button,
+  .icon-button,
+  .gallery-button { min-width: 44px; min-height: 44px; }
+
+  .button-row { gap: 10px; }
+}
