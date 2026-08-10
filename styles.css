@@ -2284,3 +2284,31 @@ body {
 .drawn-rear-eye { background: #f0b4bf; }
 .drawn-rear-button { background: #fffdf8; }
 .drawn-rear-button.button-two { background: #f1b6c0; }
+
+/* One shared physical scale for the typewriter in every scene. */
+.typewriter-model,
+.typewriter.typewriter-model,
+.hero-typewriter {
+  width: min(620px, 92vw);
+  height: 520px;
+  min-height: 0;
+  margin-inline: auto;
+}
+
+@media (max-height: 760px) and (min-width: 768px) {
+  .typewriter-model,
+  .typewriter.typewriter-model,
+  .hero-typewriter {
+    width: min(560px, 92vw);
+    height: 470px;
+  }
+}
+
+@media (max-width: 767px) {
+  .typewriter-model,
+  .typewriter.typewriter-model,
+  .hero-typewriter {
+    width: min(510px, 96vw);
+    height: 455px;
+  }
+}
