@@ -2531,3 +2531,10 @@ body {
   .typewriter-model .model-key { width: 25px; height: 25px; font-size: 7px; }
   .typewriter-model .model-key::after { top: 22px; height: 10px; }
 }
+
+/* Editorial serif for the primary page title. */
+.intro-copy h1 {
+  font-family: "Iowan Old Style", Baskerville, Georgia, "Times New Roman", serif;
+  font-weight: 600;
+  letter-spacing: -.06em;
+}
