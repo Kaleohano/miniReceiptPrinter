@@ -162,21 +162,27 @@ async function makeReceipt() {
   const keys = [...els.keyboard.querySelectorAll('.model-key'), $('#modelSpacebar')];
   let carriageStep = 0;
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const keyTimer = reduceMotion ? null : setInterval(() => {
+  let activeKey = null;
+  const keyTimer = setInterval(() => {
+    activeKey?.classList.remove('pressed');
     const key = keys[Math.floor(Math.random() * keys.length)];
     key.classList.remove('pressed');
     void key.offsetWidth;
     key.classList.add('pressed');
-    setTimeout(() => key.classList.remove('pressed'), 105);
+    activeKey = key;
+    setTimeout(() => {
+      key.classList.remove('pressed');
+      if (activeKey === key) activeKey = null;
+    }, reduceMotion ? 220 : 165);
     carriageStep = (carriageStep + 1) % 13;
-    els.carriage.style.setProperty('--carriage-x', `${(carriageStep - 6) * .7}%`);
+    if (!reduceMotion) els.carriage.style.setProperty('--carriage-x', `${(carriageStep - 6) * .9}%`);
     playClick(155 + Math.random() * 95, .035);
-  }, 115);
+  }, reduceMotion ? 440 : 120);
   const messages = ['正在读取今天的时间', '正在看看窗外的天气', '正在挑选今天的一句话', '正在排版你的照片'];
   let index = 0; els.printingStatus.textContent = messages[0];
   const timer = setInterval(() => { index = Math.min(index + 1, messages.length - 1); els.printingStatus.textContent = messages[index]; playClick(180 + index * 35); }, 700);
   await Promise.all([getContextInfo(), new Promise(resolve => setTimeout(resolve, 2850))]);
-  clearInterval(timer); if (keyTimer) clearInterval(keyTimer); els.typewriter.classList.remove('is-typing');
+  clearInterval(timer); clearInterval(keyTimer); activeKey?.classList.remove('pressed'); els.typewriter.classList.remove('is-typing');
   els.carriage.style.removeProperty('--carriage-x'); fillReceipt(); showOnly('result'); playClick(440, .18);
 }
 

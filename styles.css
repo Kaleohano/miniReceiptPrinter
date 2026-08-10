@@ -1131,3 +1131,21 @@ body { background: var(--bg); }
   .typewriter.typewriter-model { height: 500px; min-height: 440px; }
   .printing-scene .printing-status { margin-top: 8px; }
 }
+
+/* The strike must remain legible on a small screen. */
+.model-key.pressed,
+.model-spacebar.pressed {
+  color: #25281f;
+  background: #f1edc8;
+  transform: translateY(8px) rotateX(13deg) scale(.94);
+  box-shadow: 0 0 0 #3f4435, inset 0 2px 3px rgba(46, 49, 37, .25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .model-key.pressed,
+  .model-spacebar.pressed {
+    color: #25281f;
+    background: #f1edc8;
+    transform: none;
+  }
+}
