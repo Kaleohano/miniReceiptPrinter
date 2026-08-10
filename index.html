@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f1f0ec" />
+    <meta name="description" content="把一张照片打印成一份属于今天的电子小票。" />
+    <title>今日小票</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <main class="app-shell">
+      <header class="topbar">
+        <button class="wordmark" id="homeButton" type="button" aria-label="返回首页">
+          <span class="wordmark-mark">日</span>
+          <span>今日小票</span>
+        </button>
+        <div class="top-actions">
+          <span class="device-label" id="deviceLabel">正在识别设备</span>
+          <button class="icon-button" id="soundButton" type="button" aria-label="关闭声音" title="关闭声音">
+            <span aria-hidden="true">♪</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="stage" id="stage" aria-live="polite">
+        <div class="intro-copy" id="introCopy">
+          <p class="eyebrow">留住今天的一小块</p>
+          <h1>把照片，打印成<br />一张今日小票。</h1>
+          <p>拍一张或选一张照片，我们会把时间、地点、天气和一句话一起收好。</p>
+        </div>
+
+        <section class="device-scene mobile-scene" id="mobileScene" hidden>
+          <button class="polaroid-wrap" id="polaroidButton" type="button" aria-label="打开宝丽莱相机">
+            <span class="polaroid-card">
+              <span class="polaroid-face polaroid-front">
+                <span class="camera-brand">DAYPRINT</span>
+                <span class="flash"></span>
+                <span class="lens"><span></span></span>
+                <span class="view-dot"></span>
+                <span class="camera-stripe"></span>
+                <span class="camera-caption">轻触相机开始</span>
+              </span>
+              <span class="polaroid-face polaroid-back">
+                <span class="camera-brand">DAYPRINT</span>
+                <span class="viewfinder"><span>准备取景</span></span>
+                <span class="back-controls"><i></i><i></i><i></i></span>
+              </span>
+            </span>
+          </button>
+        </section>
+
+        <section class="device-scene desktop-scene" id="desktopScene" hidden>
+          <div class="printer" aria-hidden="true">
+            <div class="printer-top"><span></span></div>
+            <div class="printer-body">
+              <div class="printer-slot"></div>
+              <div class="printer-button"></div>
+            </div>
+            <div class="blank-paper">
+              <span>等待一张照片</span>
+              <i></i><i></i><i></i>
+            </div>
+          </div>
+          <button class="primary-button" id="desktopUploadButton" type="button">上传照片</button>
+          <p class="support-text">支持 JPG、PNG、WEBP，也可以直接拖到这里</p>
+        </section>
+
+        <section class="camera-overlay" id="cameraOverlay" hidden>
+          <div class="camera-panel">
+            <div class="camera-panel-top">
+              <button class="round-control" id="closeCameraButton" type="button" aria-label="关闭相机">×</button>
+              <span>后置相机</span>
+              <button class="round-control" id="switchCameraButton" type="button" aria-label="切换摄像头">↻</button>
+            </div>
+            <div class="live-view">
+              <video id="cameraVideo" autoplay playsinline muted></video>
+              <div class="focus-frame" aria-hidden="true"></div>
+              <div class="camera-message" id="cameraMessage" hidden></div>
+            </div>
+            <div class="camera-panel-bottom">
+              <button class="gallery-button" id="mobileUploadButton" type="button">相册</button>
+              <button class="shutter" id="shutterButton" type="button" aria-label="拍照"><span></span></button>
+              <span class="spacer"></span>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-panel" id="previewPanel" hidden>
+          <div class="preview-photo-wrap">
+            <img id="previewImage" alt="待制作的小票照片预览" />
+            <span class="preview-tape" aria-hidden="true"></span>
+          </div>
+          <div class="preview-copy">
+            <p class="eyebrow">照片已就位</p>
+            <h2>要把这一刻收进小票吗？</h2>
+            <p id="photoMeta">正在读取照片信息</p>
+            <div class="button-row">
+              <button class="secondary-button" id="chooseAgainButton" type="button">重新选择</button>
+              <button class="primary-button" id="makeReceiptButton" type="button">开始打印</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="printing-scene" id="printingScene" hidden>
+          <div class="typewriter" aria-hidden="true">
+            <div class="typewriter-paper" id="printingPaper">
+              <span>正在整理这一刻</span>
+              <i></i><i></i><i></i><i></i>
+            </div>
+            <div class="typewriter-bar"></div>
+            <div class="typewriter-body">
+              <div class="keys">
+                <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              </div>
+            </div>
+          </div>
+          <p class="printing-status" id="printingStatus">正在识别照片里的今天</p>
+        </section>
+
+        <section class="result-panel" id="resultPanel" hidden>
+          <div class="receipt-machine">
+            <div class="receipt-slot"></div>
+            <div class="receipt-paper" id="receiptPaper">
+              <div class="receipt-head">
+                <span>TODAY'S RECEIPT</span>
+                <small id="receiptNumber">NO. 000000</small>
+              </div>
+              <div class="receipt-photo"><img id="receiptPhoto" alt="电子小票照片贴纸" /></div>
+              <dl class="receipt-info">
+                <div><dt>日期</dt><dd id="receiptDate"></dd></div>
+                <div><dt>时间</dt><dd id="receiptTime"></dd></div>
+                <div><dt>地点</dt><dd id="receiptPlace"></dd></div>
+                <div><dt>天气</dt><dd id="receiptWeather"></dd></div>
+              </dl>
+              <blockquote id="receiptQuote"></blockquote>
+              <div class="receipt-footer"><span>THANK YOU FOR TODAY</span><span>///// // ////</span></div>
+            </div>
+          </div>
+          <div class="result-actions">
+            <p>你今天的小票打印好了。</p>
+            <div class="button-row">
+              <button class="secondary-button" id="redoButton" type="button">再做一张</button>
+              <button class="secondary-button" id="changeQuoteButton" type="button">换一句</button>
+              <button class="primary-button" id="downloadButton" type="button">保存小票</button>
+            </div>
+          </div>
+        </section>
+
+        <div class="drop-zone" id="dropZone" hidden>松开照片，开始制作</div>
+        <input id="fileInput" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" hidden />
+        <canvas id="captureCanvas" hidden></canvas>
+        <canvas id="exportCanvas" hidden></canvas>
+      </section>
+    </main>
+    <div class="toast" id="toast" role="status" hidden></div>
+    <script src="app.js"></script>
+  </body>
+</html>
