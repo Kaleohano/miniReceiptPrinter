@@ -665,7 +665,7 @@ body {
 .typewriter {
   width: min(500px, 88vw);
   height: min(620px, 76dvh);
-  background: url("assets/typewriter-olive.jpg") center / contain no-repeat;
+  background: url("assets/typewriter-olive-cutout.png") center / contain no-repeat;
 }
 .typewriter::after, .typewriter-bar, .typewriter-body { display: none; }
 .typewriter-paper {
@@ -826,4 +826,57 @@ body { background: var(--bg); }
   .desktop-scene { min-height: 610px; padding-top: 72px; }
   .typewriter-hero { width: min(450px, 44vw); }
   .desktop-scene > .upload-only-button { top: 190px; }
+}
+
+/* Isolated typewriter artwork and one consistent vertical reading flow. */
+.typewriter-hero {
+  aspect-ratio: 1122 / 1402;
+  overflow: visible;
+}
+
+.typewriter-hero-art {
+  object-fit: contain;
+  filter: none;
+  mix-blend-mode: normal;
+}
+
+.preview-panel,
+.result-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(680px, 100%);
+  gap: 28px;
+  padding: 30px 0 56px;
+  text-align: center;
+}
+
+.preview-photo-wrap {
+  width: min(520px, 82vw);
+  margin-inline: auto;
+}
+
+.preview-copy,
+.result-actions {
+  width: min(620px, 100%);
+  margin-inline: auto;
+}
+
+.preview-copy .button-row,
+.result-actions .button-row {
+  justify-content: center;
+}
+
+.receipt-machine {
+  width: 100%;
+  padding-top: 26px;
+}
+
+.result-actions > p { margin-top: 0; }
+
+@media (max-width: 767px) {
+  .preview-panel,
+  .result-panel {
+    gap: 24px;
+    padding-top: 18px;
+  }
 }
