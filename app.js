@@ -221,7 +221,7 @@ async function downloadReceipt() {
   const pattern = new Image(); pattern.crossOrigin = 'anonymous';
   await Promise.all([
     new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; image.src = state.imageUrl; }),
-    new Promise((resolve, reject) => { pattern.onload = resolve; pattern.onerror = reject; pattern.src = 'assets/checker-hearts.jpg'; })
+    new Promise((resolve, reject) => { pattern.onload = resolve; pattern.onerror = reject; pattern.src = 'assets/checker-grid.jpg'; })
   ]);
   const rounded = (x, y, width, height, radius) => {
     const r = Math.min(radius, width / 2, height / 2);
