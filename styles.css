@@ -244,6 +244,66 @@ button { color: inherit; }
   }
 }
 
+/* Blank moving keycaps cover generated letterforms and make printing tactile. */
+.animated-keyboard {
+  position: absolute;
+  z-index: 5;
+  top: 67.5%;
+  left: 20.5%;
+  width: 59%;
+  height: 17%;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  align-content: center;
+  gap: 5px 4px;
+  padding: 5px 4px;
+  transform: perspective(360px) rotateX(13deg);
+  pointer-events: none;
+}
+
+.animated-keyboard span {
+  height: clamp(8px, 1.35vw, 13px);
+  border: 1px solid rgba(54, 52, 35, .58);
+  border-radius: 45%;
+  background: #ddd9b9;
+  box-shadow: 0 2px 0 #777655;
+  transform-origin: center bottom;
+}
+
+.is-typing .animated-keyboard span {
+  animation: keyPress .54s steps(2, end) infinite;
+}
+
+.is-typing .animated-keyboard span:nth-child(4n + 1) { animation-delay: -.08s; }
+.is-typing .animated-keyboard span:nth-child(4n + 2) { animation-delay: -.25s; }
+.is-typing .animated-keyboard span:nth-child(4n + 3) { animation-delay: -.41s; }
+.is-typing .animated-keyboard span:nth-child(7n) { animation-duration: .39s; }
+
+.printing-status {
+  position: relative;
+  z-index: 6;
+  margin-top: 12px;
+  min-height: 1.5em;
+  padding: 5px 12px;
+  color: var(--muted);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+}
+
+@keyframes keyPress {
+  0%, 72%, 100% { transform: translateY(0); box-shadow: 0 2px 0 #777655; }
+  73%, 88% { transform: translateY(3px) scaleY(.82); box-shadow: 0 0 0 #777655; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-typing .animated-keyboard span { animation: none; }
+}
+
+@media (max-width: 767px) {
+  .animated-keyboard { gap: 4px 3px; }
+  .animated-keyboard span { height: 9px; }
+  .printing-status { margin-top: 8px; }
+}
+
 body {
   background-color: var(--bg);
   background-image:

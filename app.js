@@ -4,7 +4,7 @@ const els = {
   stage: $('#stage'), intro: $('#introCopy'), mobile: $('#mobileScene'), desktop: $('#desktopScene'),
   device: $('#deviceLabel'), polaroid: $('#polaroidButton'), camera: $('#cameraOverlay'), video: $('#cameraVideo'),
   cameraMessage: $('#cameraMessage'), preview: $('#previewPanel'), previewImage: $('#previewImage'), photoMeta: $('#photoMeta'),
-  printing: $('#printingScene'), printingStatus: $('#printingStatus'), result: $('#resultPanel'), receiptPhoto: $('#receiptPhoto'),
+  printing: $('#printingScene'), typewriter: $('.typewriter'), printingStatus: $('#printingStatus'), result: $('#resultPanel'), receiptPhoto: $('#receiptPhoto'),
   file: $('#fileInput'), capture: $('#captureCanvas'), export: $('#exportCanvas'), drop: $('#dropZone'), toast: $('#toast')
 };
 
@@ -142,11 +142,12 @@ function weatherName(code) {
 
 async function makeReceipt() {
   showOnly('printing'); playClick(120, .12);
+  els.typewriter.classList.add('is-typing');
   const messages = ['正在读取今天的时间', '正在看看窗外的天气', '正在挑选今天的一句话', '正在排版你的照片'];
   let index = 0; els.printingStatus.textContent = messages[0];
   const timer = setInterval(() => { index = Math.min(index + 1, messages.length - 1); els.printingStatus.textContent = messages[index]; playClick(180 + index * 35); }, 700);
   await Promise.all([getContextInfo(), new Promise(resolve => setTimeout(resolve, 2850))]);
-  clearInterval(timer); fillReceipt(); showOnly('result'); playClick(440, .18);
+  clearInterval(timer); els.typewriter.classList.remove('is-typing'); fillReceipt(); showOnly('result'); playClick(440, .18);
 }
 
 function fillReceipt() {
