@@ -27,7 +27,7 @@
       <section class="stage" id="stage" aria-live="polite">
         <div class="intro-copy" id="introCopy">
           <p class="eyebrow">PRINT A MEMORY</p>
-          <h1>Today's<br />Receipt</h1>
+          <h1>Today's <br />Receipt</h1>
           <p>放进一张照片，留下今天的时间、地点、天气和一句话。</p>
         </div>
 
@@ -50,7 +50,10 @@
           <figure class="typewriter-hero" aria-hidden="true">
             <img class="typewriter-hero-art" src="assets/typewriter-olive.jpg" alt="" width="1024" height="1280" />
           </figure>
-          <button class="primary-button" id="desktopUploadButton" type="button">上传照片</button>
+          <button class="primary-button upload-only-button" id="desktopUploadButton" type="button" aria-label="上传照片" title="上传照片">
+            <span class="upload-icon" aria-hidden="true">↑</span>
+            <span class="sr-only">上传照片</span>
+          </button>
           <p class="support-text">支持 JPG、PNG、WEBP，也可以直接拖到这里</p>
         </section>
 
