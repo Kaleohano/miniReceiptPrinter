@@ -1565,3 +1565,52 @@ body { background: var(--bg); }
   .typewriter-model .model-key { width: 23px; height: 15px; }
   .typewriter-model .return-lever { width: 82px; }
 }
+
+/* Global pink and powder-blue palette from the latest reference. */
+:root {
+  --bg: #c9edf0;
+  --surface: #b8e2e6;
+  --ink: #343837;
+  --muted: #596766;
+  --line: rgba(52, 56, 55, .28);
+  --accent: #e66e76;
+  --accent-ink: #fffafa;
+  --paper: #f8fbfb;
+  --machine: #ff9ca3;
+  --machine-light: #ffd0d3;
+  --shadow: rgba(91, 72, 75, .2);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #18383d;
+    --surface: #244a50;
+    --ink: #f5f8f7;
+    --muted: #bad3d4;
+    --line: rgba(245, 248, 247, .28);
+    --accent: #ff9ca3;
+    --accent-ink: #35282a;
+    --paper: #edf4f4;
+    --machine: #ff9ca3;
+    --machine-light: #ffd0d3;
+    --shadow: rgba(8, 20, 22, .3);
+  }
+}
+
+body {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 14% 8%, rgba(255,255,255,.2), transparent 24%),
+    linear-gradient(180deg, rgba(255,255,255,.08), transparent 38%);
+}
+
+.grain { opacity: .012; }
+.wordmark-mark { background: var(--accent); color: var(--accent-ink); }
+.intro-copy h1 { color: var(--accent); }
+.icon-button { color: var(--ink); background: rgba(255,255,255,.12); }
+.primary-button { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.secondary-button { color: var(--ink); background: rgba(248,251,251,.34); border-color: var(--ink); }
+.preview-photo-wrap { background: var(--paper); }
+.receipt-slot { background: var(--machine); }
+.receipt-paper { background: var(--paper); }
+.toast { background: var(--accent); color: var(--accent-ink); }
