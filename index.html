@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#c9edf0" />
     <meta name="description" content="把一张照片打印成一份属于今天的电子小票。" />
     <title>Today's Receipt</title>
-    <link rel="stylesheet" href="styles.css?v=20260810-6" />
+    <link rel="stylesheet" href="styles.css?v=20260810-7" />
   </head>
   <body>
     <div class="grain" aria-hidden="true"></div>
@@ -35,11 +35,21 @@
           <button class="polaroid-wrap" id="polaroidButton" type="button" aria-label="打开宝丽莱相机">
             <span class="polaroid-card">
               <span class="polaroid-face polaroid-front">
-                <img class="polaroid-reference" src="assets/polaroid-front.png" alt="" width="1000" height="1000" />
+                <span class="drawn-camera drawn-camera-front">
+                  <span class="drawn-camera-bump"></span><span class="drawn-camera-body"></span>
+                  <span class="drawn-flash"></span><span class="drawn-viewfinder"></span>
+                  <span class="drawn-lens"><i></i></span><span class="drawn-shutter"></span>
+                  <span class="drawn-brand">TODAY</span><span class="drawn-slot"></span>
+                </span>
                 <span class="camera-caption">轻触相机开始</span>
               </span>
               <span class="polaroid-face polaroid-back">
-                <img class="polaroid-reference polaroid-reference-back" src="assets/polaroid-back.png" alt="" width="868" height="1124" />
+                <span class="drawn-camera drawn-camera-rear">
+                  <span class="drawn-camera-bump"></span><span class="drawn-camera-body"></span>
+                  <span class="drawn-rear-screen"><i></i></span><span class="drawn-rear-eye"></span>
+                  <span class="drawn-rear-button button-one"></span><span class="drawn-rear-button button-two"></span>
+                  <span class="drawn-slot"></span>
+                </span>
                 <span class="camera-caption">正在打开取景框</span>
               </span>
             </span>
@@ -156,6 +166,6 @@
       </section>
     </main>
     <div class="toast" id="toast" role="status" hidden></div>
-    <script src="app.js?v=20260810-6"></script>
+    <script src="app.js?v=20260810-7"></script>
   </body>
 </html>

@@ -1711,3 +1711,187 @@ body {
 
   .button-row { gap: 10px; }
 }
+
+/* Mobile instant camera, redrawn in the pink flat-illustration language. */
+.drawn-camera {
+  position: absolute;
+  inset: 0;
+  display: block;
+  filter: drop-shadow(9px 12px 0 rgba(95, 66, 66, .14));
+}
+
+.drawn-camera-body,
+.drawn-camera-bump {
+  position: absolute;
+  display: block;
+  border: 3px solid #343837;
+  background: linear-gradient(155deg, #ffd0d3 0 16%, #ff9ca3 17% 82%, #df6268 83% 100%);
+}
+
+.drawn-camera-body {
+  left: 8%;
+  right: 8%;
+  top: 74px;
+  height: 244px;
+  border-radius: 26px 26px 17px 17px;
+  box-shadow: inset 0 5px 0 rgba(255,255,255,.22);
+}
+
+.drawn-camera-bump {
+  z-index: -1;
+  top: 38px;
+  left: 25%;
+  width: 50%;
+  height: 82px;
+  border-radius: 18px 18px 0 0;
+}
+
+.drawn-flash,
+.drawn-viewfinder,
+.drawn-shutter,
+.drawn-lens,
+.drawn-slot,
+.drawn-brand {
+  position: absolute;
+  z-index: 2;
+  display: block;
+}
+
+.drawn-flash {
+  top: 96px;
+  left: 15%;
+  width: 64px;
+  height: 48px;
+  border: 5px solid #343837;
+  border-radius: 9px;
+  background: repeating-linear-gradient(90deg, #f8fbfb 0 7px, #d9e5e5 8px 10px);
+}
+
+.drawn-viewfinder {
+  top: 94px;
+  right: 14%;
+  width: 58px;
+  height: 50px;
+  border: 5px solid #343837;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #53605f 0 34%, #202625 35% 100%);
+}
+
+.drawn-lens {
+  top: 116px;
+  left: 50%;
+  width: 138px;
+  height: 138px;
+  border: 13px solid #343837;
+  border-radius: 50%;
+  background: #dce3e2;
+  box-shadow: 0 5px 0 #b84c55, inset 0 0 0 5px #8a9290;
+  transform: translateX(-50%);
+}
+
+.drawn-lens i {
+  position: absolute;
+  inset: 17px;
+  display: block;
+  border: 5px solid #202625;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #91d8de 0 7%, #315b60 21%, #182322 52%, #0f1514 100%);
+}
+
+.drawn-shutter {
+  top: 170px;
+  left: 15%;
+  width: 43px;
+  height: 43px;
+  border: 4px solid #343837;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: inset 0 4px 0 rgba(255,255,255,.18);
+}
+
+.drawn-brand {
+  left: 15%;
+  top: 238px;
+  color: #7f3941;
+  font: 800 10px/1 "Avenir Next", sans-serif;
+  letter-spacing: .16em;
+}
+
+.drawn-slot {
+  left: 18%;
+  right: 18%;
+  top: 286px;
+  height: 16px;
+  border: 3px solid #343837;
+  border-radius: 3px 3px 8px 8px;
+  background: #202625;
+}
+
+.drawn-camera-rear .drawn-camera-body {
+  top: 50px;
+  height: 274px;
+  background: linear-gradient(155deg, #ffd0d3 0 14%, #ff9ca3 15% 84%, #df6268 85% 100%);
+}
+
+.drawn-camera-rear .drawn-camera-bump { top: 24px; height: 70px; }
+
+.drawn-rear-screen {
+  position: absolute;
+  z-index: 2;
+  top: 88px;
+  left: 18%;
+  right: 18%;
+  height: 142px;
+  display: grid;
+  place-items: center;
+  border: 9px solid #343837;
+  border-radius: 12px;
+  background: #202625;
+  box-shadow: inset 0 0 0 2px #596766;
+}
+
+.drawn-rear-screen i {
+  width: 42px;
+  height: 42px;
+  border: 2px solid rgba(248,251,251,.7);
+}
+
+.drawn-rear-eye {
+  position: absolute;
+  z-index: 3;
+  top: 58px;
+  left: 13%;
+  width: 36px;
+  height: 27px;
+  border: 4px solid #343837;
+  border-radius: 7px;
+  background: #202625;
+}
+
+.drawn-rear-button {
+  position: absolute;
+  z-index: 3;
+  top: 246px;
+  width: 34px;
+  height: 34px;
+  border: 4px solid #343837;
+  border-radius: 50%;
+  background: #f8fbfb;
+}
+.drawn-rear-button.button-one { left: 26%; }
+.drawn-rear-button.button-two { right: 26%; background: var(--accent); }
+.drawn-camera-rear .drawn-slot { top: 296px; }
+
+.polaroid-face { overflow: visible; }
+.polaroid-front .camera-caption,
+.polaroid-back .camera-caption {
+  bottom: 18px;
+  color: var(--ink);
+  font-family: "Avenir Next", sans-serif;
+  font-weight: 650;
+  letter-spacing: .04em;
+}
+
+@media (max-width: 380px) {
+  .drawn-camera { transform: scale(.94); transform-origin: center top; }
+}
