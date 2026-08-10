@@ -2312,3 +2312,65 @@ body {
     height: 455px;
   }
 }
+
+/* The final receipt is typed directly onto the paper held by the machine. */
+.printing-scene {
+  padding: 70px 0 44px;
+  overflow: visible;
+}
+
+.printing-scene .typewriter-model .receipt-in-typewriter {
+  top: -13%;
+  left: 25%;
+  width: 50%;
+  height: 78%;
+  padding: 15px 18px 22px;
+  overflow: hidden;
+}
+
+.typed-receipt {
+  width: 100%;
+  color: #82384a;
+  opacity: 0;
+  clip-path: inset(0 0 100% 0);
+}
+
+.typed-receipt.is-printing {
+  opacity: 1;
+  animation: typeReceiptContent 2.8s steps(18, end) forwards;
+}
+
+.typed-receipt.is-printed {
+  opacity: 1;
+  clip-path: inset(0);
+}
+
+.receipt-in-typewriter .receipt-head { padding-bottom: 7px; border-color: #c95e73; }
+.receipt-in-typewriter .receipt-head span { font-size: 10px; }
+.receipt-in-typewriter .receipt-head small { font-size: 6px; }
+.receipt-in-typewriter .receipt-photo { width: 74%; margin: 10px auto 8px; padding: 4px; border: 1px solid #c95e73; background: #fff5f4; box-shadow: 1px 2px 0 rgba(201,94,115,.12); }
+.receipt-in-typewriter .receipt-photo img { aspect-ratio: 4 / 3; filter: saturate(.86) contrast(1.03); }
+.receipt-in-typewriter .receipt-info { padding: 5px 0; border-color: #c95e73; }
+.receipt-in-typewriter .receipt-info div { grid-template-columns: 34px 1fr; gap: 5px; margin: 3px 0; font-size: 7px; }
+.receipt-in-typewriter .receipt-info dt { color: #c95e73; }
+.receipt-in-typewriter blockquote { margin: 7px 2px; font: 8px/1.45 "Avenir Next", "PingFang SC", sans-serif; }
+.receipt-in-typewriter .receipt-footer { gap: 3px; padding-top: 5px; border-color: #c95e73; font-size: 6px; }
+
+.printing-scene.is-complete .printing-status { animation: none; }
+.printing-actions { width: min(620px, 100%); margin: 20px auto 0; text-align: center; }
+.printing-actions > p { margin: 0; font-size: clamp(23px, 3vw, 34px); }
+.printing-actions .button-row { justify-content: center; margin-top: 18px; }
+
+@keyframes typeReceiptContent {
+  from { clip-path: inset(0 0 100% 0); }
+  to { clip-path: inset(0); }
+}
+
+@media (max-width: 767px) {
+  .printing-scene { padding-top: 64px; }
+  .printing-scene .typewriter-model .receipt-in-typewriter { top: -11%; left: 22%; width: 56%; height: 76%; padding-inline: 13px; }
+  .receipt-in-typewriter .receipt-photo { width: 70%; margin-block: 7px 5px; }
+  .receipt-in-typewriter .receipt-info div { margin-block: 2px; font-size: 6.5px; }
+  .receipt-in-typewriter blockquote { margin-block: 5px; font-size: 7px; }
+  .printing-actions { margin-top: 12px; }
+}

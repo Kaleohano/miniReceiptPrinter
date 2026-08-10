@@ -5,7 +5,7 @@ const els = {
   device: $('#deviceLabel'), polaroid: $('#polaroidButton'), camera: $('#cameraOverlay'), video: $('#cameraVideo'),
   cameraMessage: $('#cameraMessage'), preview: $('#previewPanel'), previewImage: $('#previewImage'), photoMeta: $('#photoMeta'),
   printing: $('#printingScene'), typewriter: $('#printingScene .typewriter-model'), keyboard: $('#modelKeyboard'), carriage: $('#typewriterCarriage'),
-  printingStatus: $('#printingStatus'), result: $('#resultPanel'), receiptPhoto: $('#receiptPhoto'),
+  printingStatus: $('#printingStatus'), printingActions: $('#printingActions'), typedReceipt: $('#typedReceipt'), receiptPhoto: $('#receiptPhoto'),
   file: $('#fileInput'), capture: $('#captureCanvas'), export: $('#exportCanvas'), drop: $('#dropZone'), toast: $('#toast')
 };
 
@@ -52,7 +52,7 @@ function detectDevice() {
 }
 
 function showOnly(name) {
-  const sections = { mobile: els.mobile, desktop: els.desktop, preview: els.preview, printing: els.printing, result: els.result };
+  const sections = { mobile: els.mobile, desktop: els.desktop, preview: els.preview, printing: els.printing };
   Object.entries(sections).forEach(([key, element]) => { element.hidden = key !== name; });
   els.intro.hidden = !['mobile', 'desktop'].includes(name);
 }
@@ -160,6 +160,14 @@ function weatherName(code) {
 
 async function makeReceipt() {
   showOnly('printing'); playClick(120, .12);
+  els.printing.classList.remove('is-complete');
+  els.printingActions.hidden = true;
+  els.typedReceipt.classList.remove('is-printing', 'is-printed');
+  els.printingStatus.textContent = '正在读取今天的信息';
+  await getContextInfo();
+  fillReceipt();
+  void els.typedReceipt.offsetWidth;
+  els.typedReceipt.classList.add('is-printing');
   els.typewriter.classList.add('is-typing');
   const keys = [...els.keyboard.querySelectorAll('.model-key'), $('#modelSpacebar')];
   let carriageStep = 0;
@@ -183,9 +191,10 @@ async function makeReceipt() {
   const messages = ['正在读取今天的时间', '正在看看窗外的天气', '正在挑选今天的一句话', '正在排版你的照片'];
   let index = 0; els.printingStatus.textContent = messages[0];
   const timer = setInterval(() => { index = Math.min(index + 1, messages.length - 1); els.printingStatus.textContent = messages[index]; playClick(180 + index * 35); }, 700);
-  await Promise.all([getContextInfo(), new Promise(resolve => setTimeout(resolve, 2850))]);
+  await new Promise(resolve => setTimeout(resolve, 2850));
   clearInterval(timer); clearInterval(keyTimer); activeKey?.classList.remove('pressed'); els.typewriter.classList.remove('is-typing');
-  els.carriage.style.removeProperty('--carriage-x'); fillReceipt(); showOnly('result'); playClick(440, .18);
+  els.carriage.style.removeProperty('--carriage-x'); els.typedReceipt.classList.remove('is-printing'); els.typedReceipt.classList.add('is-printed');
+  els.printing.classList.add('is-complete'); els.printingActions.hidden = false; els.printingStatus.textContent = '打印完成'; playClick(440, .18);
 }
 
 function fillReceipt() {
@@ -206,23 +215,54 @@ function drawCover(ctx, image, x, y, width, height) {
 }
 
 async function downloadReceipt() {
-  const canvas = els.export, ctx = canvas.getContext('2d'); canvas.width = 900; canvas.height = 1450;
-  ctx.fillStyle = '#fffdf5'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = '#292925'; ctx.textBaseline = 'top'; ctx.font = 'bold 36px monospace'; ctx.fillText("TODAY'S RECEIPT", 62, 62);
-  ctx.textAlign = 'right'; ctx.font = '20px monospace'; ctx.fillText($('#receiptNumber').textContent, 838, 72); ctx.textAlign = 'left';
-  ctx.setLineDash([14, 11]); ctx.strokeStyle = '#77746c'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(62, 126); ctx.lineTo(838, 126); ctx.stroke(); ctx.setLineDash([]);
+  const canvas = els.export, ctx = canvas.getContext('2d'); canvas.width = 1200; canvas.height = 1400;
+  const rose = '#c95e73', pale = '#fff8f5', paper = '#fffdf8', blue = '#cfecef';
+  const rounded = (x, y, width, height, radius) => {
+    const r = Math.min(radius, width / 2, height / 2);
+    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + width - r, y); ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+    ctx.lineTo(x + width, y + height - r); ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+    ctx.lineTo(x + r, y + height); ctx.quadraticCurveTo(x, y + height, x, y + height - r); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+  };
+  const line = (x1, y1, x2, y2, width = 3) => { ctx.lineWidth = width; ctx.strokeStyle = rose; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); };
+  const fitText = (text, x, y, maxWidth, lineHeight, maxLines = 2) => {
+    const chars = [...text]; let row = '', rows = [];
+    chars.forEach(char => { const test = row + char; if (ctx.measureText(test).width > maxWidth && row) { rows.push(row); row = char; } else row = test; });
+    if (row) rows.push(row); rows.slice(0, maxLines).forEach((value, index) => ctx.fillText(value, x, y + index * lineHeight));
+  };
+  ctx.fillStyle = blue; ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = 'rgba(201,94,115,.12)'; ctx.lineWidth = 2;
+  for (let x = 0; x < canvas.width; x += 52) line(x, 0, x, canvas.height, 1);
+  for (let y = 0; y < canvas.height; y += 52) line(0, y, canvas.width, y, 1);
+
+  ctx.save(); ctx.shadowColor = 'rgba(201,94,115,.14)'; ctx.shadowOffsetX = 10; ctx.shadowOffsetY = 12;
+  ctx.fillStyle = paper; rounded(300, 55, 600, 800, 8); ctx.fill(); ctx.restore();
+  ctx.strokeStyle = rose; ctx.lineWidth = 3; rounded(300, 55, 600, 800, 8); ctx.stroke();
+  ctx.fillStyle = '#a53f55'; ctx.textBaseline = 'top'; ctx.font = 'bold 28px monospace'; ctx.fillText("TODAY'S RECEIPT", 340, 92);
+  ctx.textAlign = 'right'; ctx.font = '16px monospace'; ctx.fillText($('#receiptNumber').textContent, 860, 100); ctx.textAlign = 'left';
+  ctx.setLineDash([10, 8]); line(340, 143, 860, 143, 2); ctx.setLineDash([]);
   const image = new Image(); image.crossOrigin = 'anonymous';
   await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; image.src = state.imageUrl; });
-  ctx.save(); ctx.translate(450, 370); ctx.rotate(-.018); ctx.fillStyle = '#eee9dc'; ctx.fillRect(-335, -196, 670, 392); drawCover(ctx, image, -317, -178, 634, 356); ctx.restore();
+  ctx.save(); ctx.translate(600, 320); ctx.rotate(-.018); ctx.fillStyle = '#f7dfe3'; ctx.fillRect(-215, -142, 430, 284); drawCover(ctx, image, -202, -129, 404, 258); ctx.restore();
   const rows = [['日期', $('#receiptDate').textContent], ['时间', $('#receiptTime').textContent], ['地点', state.location], ['天气', state.weather]];
-  ctx.setLineDash([11, 9]); ctx.beginPath(); ctx.moveTo(62, 598); ctx.lineTo(838, 598); ctx.stroke(); ctx.setLineDash([]);
-  rows.forEach((row, i) => { const y = 646 + i * 74; ctx.fillStyle = '#77746c'; ctx.font = '24px sans-serif'; ctx.fillText(row[0], 70, y); ctx.fillStyle = '#292925'; ctx.textAlign = 'right'; ctx.fillText(row[1], 830, y); ctx.textAlign = 'left'; });
-  ctx.setLineDash([11, 9]); ctx.beginPath(); ctx.moveTo(62, 950); ctx.lineTo(838, 950); ctx.stroke(); ctx.setLineDash([]);
-  ctx.fillStyle = '#292925'; ctx.textAlign = 'center'; ctx.font = '30px sans-serif'; ctx.fillText(`“${quotes[state.quoteIndex]}”`, 450, 1025, 750);
-  ctx.setLineDash([14, 11]); ctx.beginPath(); ctx.moveTo(62, 1160); ctx.lineTo(838, 1160); ctx.stroke(); ctx.setLineDash([]);
-  ctx.font = 'bold 20px monospace'; ctx.fillText('THANK YOU FOR TODAY', 450, 1215); ctx.font = '19px monospace'; ctx.fillText('///// // ////', 450, 1260);
-  ctx.fillStyle = '#292925'; for (let i = 0; i < 90; i += 18) ctx.fillRect(365 + i, 1320, i % 36 ? 8 : 12, 55);
-  const link = document.createElement('a'); link.download = `今日小票-${Date.now()}.png`; link.href = canvas.toDataURL('image/png'); link.click();
+  ctx.setLineDash([8, 7]); line(340, 480, 860, 480, 2); ctx.setLineDash([]);
+  rows.forEach((row, i) => { const y = 510 + i * 43; ctx.fillStyle = '#c95e73'; ctx.font = '18px sans-serif'; ctx.fillText(row[0], 350, y); ctx.fillStyle = '#82384a'; ctx.textAlign = 'right'; ctx.fillText(row[1], 850, y); ctx.textAlign = 'left'; });
+  ctx.setLineDash([8, 7]); line(340, 695, 860, 695, 2); ctx.setLineDash([]);
+  ctx.fillStyle = '#82384a'; ctx.textAlign = 'center'; ctx.font = '20px sans-serif'; fitText(`“${quotes[state.quoteIndex]}”`, 600, 720, 470, 30, 2);
+  ctx.font = 'bold 14px monospace'; ctx.fillText('THANK YOU FOR TODAY', 600, 792); ctx.textAlign = 'left';
+
+  ctx.fillStyle = pale; ctx.strokeStyle = rose; ctx.lineWidth = 4; rounded(135, 790, 930, 480, 55); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#fff1f1'; ctx.strokeStyle = rose; rounded(205, 815, 790, 130, 22); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = paper; ctx.strokeStyle = rose; rounded(230, 865, 740, 300, 18); ctx.fill(); ctx.stroke();
+  const labels = ['1','2','3','4','5','6','7','8','9','0','Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M'];
+  const counts = [10, 10, 9, 7]; let keyIndex = 0;
+  counts.forEach((count, rowIndex) => {
+    const keySize = 48, gap = 14, rowWidth = count * keySize + (count - 1) * gap, startX = 600 - rowWidth / 2 + rowIndex * 5;
+    for (let i = 0; i < count; i += 1) { const x = startX + i * (keySize + gap), y = 900 + rowIndex * 61; ctx.fillStyle = '#fffdf8'; ctx.strokeStyle = rose; ctx.lineWidth = 3; rounded(x, y, keySize, 38, 8); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#a53f55'; ctx.textAlign = 'center'; ctx.font = 'bold 15px monospace'; ctx.fillText(labels[keyIndex++], x + keySize / 2, y + 10); }
+  });
+  ctx.fillStyle = '#fff0f0'; ctx.strokeStyle = rose; rounded(430, 1155, 340, 36, 8); ctx.fill(); ctx.stroke();
+  line(105, 835, 250, 780, 8); line(1045, 820, 1100, 820, 8);
+  ctx.fillStyle = '#b94a61'; ctx.textAlign = 'center'; ctx.font = 'bold 24px sans-serif'; ctx.fillText("TODAY'S RECEIPT", 600, 1315);
+  const link = document.createElement('a'); link.download = `今日打字机小票-${Date.now()}.png`; link.href = canvas.toDataURL('image/png'); link.click();
   ctx.textAlign = 'left'; toast('小票已经保存'); playClick(520, .15);
 }
 

@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#c9edf0" />
     <meta name="description" content="把一张照片打印成一份属于今天的电子小票。" />
     <title>Today's Receipt</title>
-    <link rel="stylesheet" href="styles.css?v=20260810-11" />
+    <link rel="stylesheet" href="styles.css?v=20260810-12" />
   </head>
   <body>
     <div class="grain" aria-hidden="true"></div>
@@ -109,9 +109,22 @@
 
         <section class="printing-scene" id="printingScene" hidden>
           <div class="typewriter typewriter-model" aria-hidden="true">
-            <div class="model-paper" id="printingPaper">
-              <span>正在整理这一刻</span>
-              <i></i><i></i><i></i><i></i>
+            <div class="model-paper receipt-in-typewriter" id="printingPaper">
+              <div class="typed-receipt" id="typedReceipt">
+                <div class="receipt-head">
+                  <span>TODAY'S RECEIPT</span>
+                  <small id="receiptNumber">NO. 000000</small>
+                </div>
+                <div class="receipt-photo"><img id="receiptPhoto" alt="电子小票照片贴纸" /></div>
+                <dl class="receipt-info">
+                  <div><dt>日期</dt><dd id="receiptDate"></dd></div>
+                  <div><dt>时间</dt><dd id="receiptTime"></dd></div>
+                  <div><dt>地点</dt><dd id="receiptPlace"></dd></div>
+                  <div><dt>天气</dt><dd id="receiptWeather"></dd></div>
+                </dl>
+                <blockquote id="receiptQuote"></blockquote>
+                <div class="receipt-footer"><span>THANK YOU FOR TODAY</span><span>///// // ////</span></div>
+              </div>
             </div>
             <div class="model-carriage" id="typewriterCarriage">
               <span class="carriage-knob"></span>
@@ -128,28 +141,7 @@
             </div>
           </div>
           <p class="printing-status" id="printingStatus">正在识别照片里的今天</p>
-        </section>
-
-        <section class="result-panel" id="resultPanel" hidden>
-          <div class="receipt-machine">
-            <div class="receipt-slot"></div>
-            <div class="receipt-paper" id="receiptPaper">
-              <div class="receipt-head">
-                <span>TODAY'S RECEIPT</span>
-                <small id="receiptNumber">NO. 000000</small>
-              </div>
-              <div class="receipt-photo"><img id="receiptPhoto" alt="电子小票照片贴纸" /></div>
-              <dl class="receipt-info">
-                <div><dt>日期</dt><dd id="receiptDate"></dd></div>
-                <div><dt>时间</dt><dd id="receiptTime"></dd></div>
-                <div><dt>地点</dt><dd id="receiptPlace"></dd></div>
-                <div><dt>天气</dt><dd id="receiptWeather"></dd></div>
-              </dl>
-              <blockquote id="receiptQuote"></blockquote>
-              <div class="receipt-footer"><span>THANK YOU FOR TODAY</span><span>///// // ////</span></div>
-            </div>
-          </div>
-          <div class="result-actions">
+          <div class="result-actions printing-actions" id="printingActions" hidden>
             <p>你今天的小票打印好了。</p>
             <div class="button-row">
               <button class="secondary-button" id="redoButton" type="button">再做一张</button>
@@ -166,6 +158,6 @@
       </section>
     </main>
     <div class="toast" id="toast" role="status" hidden></div>
-    <script src="app.js?v=20260810-11"></script>
+    <script src="app.js?v=20260810-12"></script>
   </body>
 </html>
