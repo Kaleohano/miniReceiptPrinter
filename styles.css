@@ -213,3 +213,248 @@ button { color: inherit; }
 @media (prefers-reduced-transparency: reduce) {
   .camera-overlay, .drop-zone { backdrop-filter: none; background: #202826; }
 }
+
+/* Hand-drawn visual system: ink outlines, paper grain, one vermilion accent. */
+:root {
+  --bg: #f8f7f2;
+  --surface: #f8f7f2;
+  --ink: #292b28;
+  --muted: #686a64;
+  --line: rgba(41, 43, 40, .7);
+  --accent: #d9513b;
+  --accent-ink: #fffdf7;
+  --paper: #fffef9;
+  --machine: transparent;
+  --machine-light: transparent;
+  --shadow: transparent;
+  --radius: 6px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #20221f;
+    --surface: #20221f;
+    --ink: #eeede6;
+    --muted: #b8b8b0;
+    --line: rgba(238, 237, 230, .72);
+    --paper: #e9e7de;
+    --machine: transparent;
+    --machine-light: transparent;
+    --shadow: transparent;
+  }
+}
+
+body {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(rgba(41,43,40,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(41,43,40,.018) 1px, transparent 1px);
+  background-size: 27px 27px, 27px 27px;
+}
+
+.grain { opacity: .025; }
+
+.topbar {
+  position: relative;
+  border: 0;
+}
+
+.topbar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 1.5%;
+  bottom: 3px;
+  height: 2px;
+  background: var(--ink);
+  opacity: .78;
+  transform: rotate(-.12deg) scaleX(.995);
+  transform-origin: left;
+  clip-path: polygon(0 20%, 8% 35%, 17% 12%, 29% 44%, 41% 18%, 55% 38%, 68% 14%, 82% 36%, 93% 16%, 100% 30%, 100% 75%, 91% 61%, 79% 84%, 66% 58%, 52% 81%, 39% 55%, 25% 80%, 13% 58%, 0 77%);
+}
+
+.wordmark { font-family: "Kaiti SC", STKaiti, "PingFang SC", sans-serif; font-size: 17px; letter-spacing: .04em; }
+.wordmark-mark {
+  width: 34px;
+  height: 34px;
+  color: var(--accent);
+  background: transparent;
+  border: 2px solid var(--accent);
+  border-radius: 48% 52% 46% 54% / 53% 45% 55% 47%;
+  transform: rotate(-5deg);
+}
+
+.icon-button, .round-control {
+  background: transparent;
+  border: 1.8px solid currentColor;
+  box-shadow: 2px 2px 0 color-mix(in srgb, currentColor 22%, transparent);
+}
+
+.icon-button { border-radius: 48% 52% 45% 55% / 52% 45% 55% 48%; transform: rotate(2deg); }
+
+.eyebrow {
+  position: relative;
+  display: inline-block;
+  margin-left: 6px;
+  color: var(--accent);
+  font-family: "Kaiti SC", STKaiti, "PingFang SC", sans-serif;
+  font-size: 14px;
+  letter-spacing: .08em;
+}
+
+.eyebrow::after {
+  content: "";
+  position: absolute;
+  left: -5px;
+  right: -9px;
+  bottom: -6px;
+  height: 7px;
+  border-top: 2px solid var(--accent);
+  border-radius: 50%;
+  transform: rotate(-1.5deg);
+}
+
+.intro-copy h1, .preview-copy h2, .result-actions > p {
+  font-family: "Kaiti SC", STKaiti, "PingFang SC", sans-serif;
+  font-weight: 700;
+  letter-spacing: -.045em;
+}
+
+.intro-copy h1 { transform: rotate(-.4deg); }
+.intro-copy > p:last-child { line-height: 1.75; }
+
+.polaroid-card { transition-duration: .72s; }
+.polaroid-wrap:hover .polaroid-card { transform: rotate(-1.2deg) translateY(-5px); }
+.polaroid-face {
+  overflow: visible;
+  border: 2.5px solid #292b28;
+  border-radius: 9px 5px 8px 6px;
+  background: #fffef9;
+  box-shadow: 5px 6px 0 rgba(41,43,40,.12);
+}
+
+.polaroid-face::before {
+  content: "";
+  position: absolute;
+  inset: 6px -5px -5px 5px;
+  z-index: -1;
+  border: 1.3px solid #292b28;
+  border-radius: 6px 9px 5px 8px;
+  transform: rotate(.5deg);
+}
+
+.polaroid-front::after {
+  top: 36%;
+  height: 5px;
+  background: var(--accent);
+  box-shadow: none;
+  transform: rotate(-.5deg);
+}
+
+.camera-brand, .camera-caption { color: #292b28; font-family: "Kaiti SC", STKaiti, monospace; }
+.flash {
+  background: repeating-linear-gradient(90deg, transparent 0 8px, rgba(41,43,40,.2) 8px 10px);
+  border: 2px solid #292b28;
+  border-radius: 4px 7px 5px 3px;
+  transform: rotate(-1deg);
+}
+
+.lens {
+  background: transparent;
+  border: 3px solid #292b28;
+  box-shadow: 0 0 0 8px #fffef9, 0 0 0 10px #292b28;
+}
+
+.lens span {
+  inset: 17px;
+  background: radial-gradient(circle at 38% 34%, #fffef9 0 4%, #292b28 6% 13%, #fffef9 14% 21%, #292b28 22% 100%);
+  border: 2px solid #292b28;
+}
+
+.view-dot { background: #fffef9; border: 2px solid #292b28; box-shadow: inset 0 0 0 6px #292b28; }
+.camera-stripe { background: transparent; border: 2px solid #292b28; border-radius: 5px 3px 4px 6px; box-shadow: none; transform: translateX(-50%) rotate(.4deg); }
+.polaroid-back { background: #fffef9; }
+.viewfinder { border: 3px solid #292b28; border-radius: 5px 8px 4px 7px; color: #292b28; background: transparent; box-shadow: 4px 4px 0 rgba(41,43,40,.12); }
+.back-controls i { background: transparent; border: 2px solid #292b28; box-shadow: inset 0 0 0 5px #fffef9; }
+
+.printer::after, .typewriter::after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 33px;
+  height: 8px;
+  border-top: 2px solid var(--ink);
+  border-radius: 50%;
+  opacity: .45;
+  transform: rotate(.7deg);
+}
+
+.printer-top {
+  border: 2px solid var(--ink);
+  border-radius: 7px 5px 4px 6px;
+  background: var(--bg);
+  box-shadow: none;
+}
+.printer-top span { height: 6px; border: 2px solid var(--ink); background: transparent; }
+.printer-body {
+  border: 2.5px solid var(--ink);
+  border-radius: 9px 5px 8px 6px;
+  background: var(--bg);
+  box-shadow: 5px 5px 0 color-mix(in srgb, var(--ink) 12%, transparent);
+  transform: rotate(.35deg);
+}
+.printer-body::before {
+  content: "";
+  position: absolute;
+  inset: 8px -6px -5px 6px;
+  z-index: -1;
+  border: 1px solid var(--ink);
+  border-radius: 5px 8px 4px 7px;
+}
+.printer-slot { height: 9px; border: 2px solid var(--ink); background: transparent; }
+.printer-button { width: 16px; height: 16px; border: 2px solid var(--accent); background: transparent; }
+.blank-paper { border: 1.5px solid #292b28; box-shadow: 3px 4px 0 rgba(41,43,40,.1); }
+.blank-paper i { height: 1px; background: #7d7d75; transform: rotate(-.7deg); }
+
+.primary-button, .secondary-button {
+  min-height: 46px;
+  border-width: 2px;
+  border-radius: 7px 5px 8px 6px;
+  box-shadow: 3px 3px 0 color-mix(in srgb, var(--ink) 22%, transparent);
+  transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s;
+}
+.primary-button { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
+.secondary-button { background: var(--bg); border-color: var(--ink); }
+.primary-button:hover, .secondary-button:hover { transform: translate(-1px, -2px) rotate(-.4deg); box-shadow: 5px 6px 0 color-mix(in srgb, var(--ink) 20%, transparent); }
+.primary-button:active, .secondary-button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 color-mix(in srgb, var(--ink) 20%, transparent); }
+
+.camera-overlay { background: color-mix(in srgb, var(--bg) 92%, transparent); }
+.camera-panel { color: var(--ink); background: var(--bg); border: 2px solid var(--ink); border-radius: 8px 5px 7px 6px; box-shadow: 6px 7px 0 color-mix(in srgb, var(--ink) 18%, transparent); }
+.round-control { color: var(--ink); background: transparent; border-color: var(--ink); }
+.live-view { border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); background: #292b28; }
+.focus-frame { border: 1.5px dashed rgba(255,255,255,.8); }
+.camera-message { color: var(--ink); background: var(--bg); }
+.gallery-button { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+
+.preview-photo-wrap { border: 1.8px solid #292b28; box-shadow: 4px 5px 0 rgba(41,43,40,.12); }
+.preview-tape { height: 28px; background: color-mix(in srgb, var(--accent) 38%, transparent); }
+
+.typewriter-paper { border: 1.5px solid #292b28; box-shadow: 3px 4px 0 rgba(41,43,40,.1); }
+.typewriter-paper i { height: 2px; background: #66665f; }
+.typewriter-bar { border: 2px solid var(--ink); border-radius: 8px 5px 7px 6px; background: var(--bg); box-shadow: none; }
+.typewriter-body { border: 2.5px solid var(--ink); border-radius: 9px 5px 8px 6px; background: var(--bg); box-shadow: 5px 5px 0 color-mix(in srgb, var(--ink) 13%, transparent); }
+.keys i { border: 1.5px solid var(--ink); background: var(--bg); box-shadow: 1px 2px 0 var(--ink); }
+
+.receipt-slot { border: 2px solid var(--ink); border-radius: 8px 5px 7px 6px; background: var(--bg); box-shadow: 4px 5px 0 color-mix(in srgb, var(--ink) 14%, transparent); }
+.receipt-slot::after { height: 8px; border: 2px solid var(--ink); background: transparent; }
+.receipt-paper { border: 1.5px solid #292b28; box-shadow: 4px 6px 0 rgba(41,43,40,.13); }
+.receipt-photo { border: 1.5px solid #292b28; box-shadow: 2px 2px 0 rgba(40,40,36,.16); }
+.drop-zone { border: 2px dashed var(--accent); border-radius: 7px 5px 8px 6px; }
+.toast { border: 2px solid #292b28; border-radius: 7px 5px 8px 6px; box-shadow: 3px 3px 0 rgba(41,43,40,.25); }
+
+@media (max-width: 767px) {
+  .intro-copy h1 { transform: rotate(-.25deg); }
+  .polaroid-face { box-shadow: 3px 4px 0 rgba(41,43,40,.12); }
+  .camera-panel { border: 0; box-shadow: none; }
+}
