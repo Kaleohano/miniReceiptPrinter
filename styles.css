@@ -2374,3 +2374,16 @@ body {
   .receipt-in-typewriter blockquote { margin-block: 5px; font-size: 7px; }
   .printing-actions { margin-top: 12px; }
 }
+
+/* Global hand-painted checker and heart textile. */
+body {
+  background-color: #dcebf1;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .24), rgba(255, 255, 255, .24)),
+    url("assets/checker-hearts.jpg");
+  background-repeat: repeat;
+  background-position: center top;
+  background-size: 576px auto;
+}
+
+.grain { opacity: .018; }

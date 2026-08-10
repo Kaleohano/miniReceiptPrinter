@@ -217,6 +217,12 @@ function drawCover(ctx, image, x, y, width, height) {
 async function downloadReceipt() {
   const canvas = els.export, ctx = canvas.getContext('2d'); canvas.width = 1200; canvas.height = 1400;
   const rose = '#c95e73', pale = '#fff8f5', paper = '#fffdf8', blue = '#cfecef';
+  const image = new Image(); image.crossOrigin = 'anonymous';
+  const pattern = new Image(); pattern.crossOrigin = 'anonymous';
+  await Promise.all([
+    new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; image.src = state.imageUrl; }),
+    new Promise((resolve, reject) => { pattern.onload = resolve; pattern.onerror = reject; pattern.src = 'assets/checker-hearts.jpg'; })
+  ]);
   const rounded = (x, y, width, height, radius) => {
     const r = Math.min(radius, width / 2, height / 2);
     ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + width - r, y); ctx.quadraticCurveTo(x + width, y, x + width, y + r);
@@ -230,9 +236,9 @@ async function downloadReceipt() {
     if (row) rows.push(row); rows.slice(0, maxLines).forEach((value, index) => ctx.fillText(value, x, y + index * lineHeight));
   };
   ctx.fillStyle = blue; ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.strokeStyle = 'rgba(201,94,115,.12)'; ctx.lineWidth = 2;
-  for (let x = 0; x < canvas.width; x += 52) line(x, 0, x, canvas.height, 1);
-  for (let y = 0; y < canvas.height; y += 52) line(0, y, canvas.width, y, 1);
+  const tileWidth = 600, tileHeight = tileWidth * pattern.height / pattern.width;
+  for (let y = 0; y < canvas.height; y += tileHeight) for (let x = 0; x < canvas.width; x += tileWidth) ctx.drawImage(pattern, x, y, tileWidth, tileHeight);
+  ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   ctx.save(); ctx.shadowColor = 'rgba(201,94,115,.14)'; ctx.shadowOffsetX = 10; ctx.shadowOffsetY = 12;
   ctx.fillStyle = paper; rounded(300, 55, 600, 800, 8); ctx.fill(); ctx.restore();
@@ -240,8 +246,6 @@ async function downloadReceipt() {
   ctx.fillStyle = '#a53f55'; ctx.textBaseline = 'top'; ctx.font = 'bold 28px monospace'; ctx.fillText("TODAY'S RECEIPT", 340, 92);
   ctx.textAlign = 'right'; ctx.font = '16px monospace'; ctx.fillText($('#receiptNumber').textContent, 860, 100); ctx.textAlign = 'left';
   ctx.setLineDash([10, 8]); line(340, 143, 860, 143, 2); ctx.setLineDash([]);
-  const image = new Image(); image.crossOrigin = 'anonymous';
-  await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; image.src = state.imageUrl; });
   ctx.save(); ctx.translate(600, 320); ctx.rotate(-.018); ctx.fillStyle = '#f7dfe3'; ctx.fillRect(-215, -142, 430, 284); drawCover(ctx, image, -202, -129, 404, 258); ctx.restore();
   const rows = [['日期', $('#receiptDate').textContent], ['时间', $('#receiptTime').textContent], ['地点', state.location], ['天气', state.weather]];
   ctx.setLineDash([8, 7]); line(340, 480, 860, 480, 2); ctx.setLineDash([]);
