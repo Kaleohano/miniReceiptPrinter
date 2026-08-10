@@ -254,17 +254,15 @@ async function downloadReceipt() {
   ctx.fillStyle = '#82384a'; ctx.textAlign = 'center'; ctx.font = '20px sans-serif'; fitText(`“${quotes[state.quoteIndex]}”`, 600, 720, 470, 30, 2);
   ctx.font = 'bold 14px monospace'; ctx.fillText('THANK YOU FOR TODAY', 600, 792); ctx.textAlign = 'left';
 
-  ctx.fillStyle = pale; ctx.strokeStyle = rose; ctx.lineWidth = 4; rounded(135, 790, 930, 480, 55); ctx.fill(); ctx.stroke();
-  ctx.fillStyle = '#fff1f1'; ctx.strokeStyle = rose; rounded(205, 815, 790, 130, 22); ctx.fill(); ctx.stroke();
-  ctx.fillStyle = paper; ctx.strokeStyle = rose; rounded(230, 865, 740, 300, 18); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#c95772'; ctx.strokeStyle = '#a83f59'; ctx.lineWidth = 5; rounded(115, 790, 970, 88, 28); ctx.fill(); ctx.stroke();
+  [155, 1045].forEach(x => { ctx.fillStyle = '#f8c8d1'; ctx.beginPath(); ctx.arc(x, 807, 38, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 8) line(x, 807, x + Math.cos(angle) * 34, 807 + Math.sin(angle) * 34, 2); });
+  ctx.fillStyle = '#e98299'; ctx.strokeStyle = '#a83f59'; rounded(115, 845, 970, 390, 25); ctx.fill(); ctx.stroke();
   const labels = ['1','2','3','4','5','6','7','8','9','0','Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M'];
   const counts = [10, 10, 9, 7]; let keyIndex = 0;
   counts.forEach((count, rowIndex) => {
-    const keySize = 48, gap = 14, rowWidth = count * keySize + (count - 1) * gap, startX = 600 - rowWidth / 2 + rowIndex * 5;
-    for (let i = 0; i < count; i += 1) { const x = startX + i * (keySize + gap), y = 900 + rowIndex * 61; ctx.fillStyle = '#fffdf8'; ctx.strokeStyle = rose; ctx.lineWidth = 3; rounded(x, y, keySize, 38, 8); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#a53f55'; ctx.textAlign = 'center'; ctx.font = 'bold 15px monospace'; ctx.fillText(labels[keyIndex++], x + keySize / 2, y + 10); }
+    const keySize = 48, gap = 23, rowWidth = count * keySize + (count - 1) * gap, startX = 600 - rowWidth / 2 + rowIndex * 6;
+    for (let i = 0; i < count; i += 1) { const x = startX + i * (keySize + gap), y = 900 + rowIndex * 70; line(x + keySize / 2, y + 39, x + keySize / 2, y + 59, 3); ctx.fillStyle = '#fff2f3'; ctx.strokeStyle = '#a83f59'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(x + keySize / 2, y + keySize / 2, keySize / 2, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#8c3047'; ctx.textAlign = 'center'; ctx.font = 'bold 15px monospace'; ctx.fillText(labels[keyIndex++], x + keySize / 2, y + 15); }
   });
-  ctx.fillStyle = '#fff0f0'; ctx.strokeStyle = rose; rounded(430, 1155, 340, 36, 8); ctx.fill(); ctx.stroke();
-  line(105, 835, 250, 780, 8); line(1045, 820, 1100, 820, 8);
   ctx.fillStyle = '#b94a61'; ctx.textAlign = 'center'; ctx.font = 'bold 24px sans-serif'; ctx.fillText("TODAY'S RECEIPT", 600, 1315);
   const link = document.createElement('a'); link.download = `今日打字机小票-${Date.now()}.png`; link.href = canvas.toDataURL('image/png'); link.click();
   ctx.textAlign = 'left'; toast('小票已经保存'); playClick(520, .15);
