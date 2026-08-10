@@ -4,7 +4,7 @@ const els = {
   stage: $('#stage'), intro: $('#introCopy'), mobile: $('#mobileScene'), desktop: $('#desktopScene'),
   device: $('#deviceLabel'), polaroid: $('#polaroidButton'), camera: $('#cameraOverlay'), video: $('#cameraVideo'),
   cameraMessage: $('#cameraMessage'), preview: $('#previewPanel'), previewImage: $('#previewImage'), photoMeta: $('#photoMeta'),
-  printing: $('#printingScene'), typewriter: $('.typewriter-model'), keyboard: $('#modelKeyboard'), carriage: $('#typewriterCarriage'),
+  printing: $('#printingScene'), typewriter: $('#printingScene .typewriter-model'), keyboard: $('#modelKeyboard'), carriage: $('#typewriterCarriage'),
   printingStatus: $('#printingStatus'), result: $('#resultPanel'), receiptPhoto: $('#receiptPhoto'),
   file: $('#fileInput'), capture: $('#captureCanvas'), export: $('#exportCanvas'), drop: $('#dropZone'), toast: $('#toast')
 };
