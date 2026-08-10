@@ -94,22 +94,20 @@
         </section>
 
         <section class="printing-scene" id="printingScene" hidden>
-          <div class="typewriter" aria-hidden="true">
-            <div class="typewriter-paper" id="printingPaper">
+          <div class="typewriter typewriter-model" aria-hidden="true">
+            <div class="model-paper" id="printingPaper">
               <span>正在整理这一刻</span>
               <i></i><i></i><i></i><i></i>
             </div>
-            <div class="typewriter-bar"></div>
-            <div class="typewriter-body">
-              <div class="keys">
-                <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-                <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-              </div>
+            <div class="model-carriage" id="typewriterCarriage">
+              <span class="carriage-knob"></span>
+              <span class="carriage-rail"></span>
+              <span class="carriage-knob"></span>
             </div>
-            <div class="animated-keyboard">
-              <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            <div class="model-shell">
+              <div class="model-brand">TODAY</div>
+              <div class="model-keyboard" id="modelKeyboard"></div>
+              <span class="model-spacebar" id="modelSpacebar"></span>
             </div>
           </div>
           <p class="printing-status" id="printingStatus">正在识别照片里的今天</p>

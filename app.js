@@ -4,7 +4,8 @@ const els = {
   stage: $('#stage'), intro: $('#introCopy'), mobile: $('#mobileScene'), desktop: $('#desktopScene'),
   device: $('#deviceLabel'), polaroid: $('#polaroidButton'), camera: $('#cameraOverlay'), video: $('#cameraVideo'),
   cameraMessage: $('#cameraMessage'), preview: $('#previewPanel'), previewImage: $('#previewImage'), photoMeta: $('#photoMeta'),
-  printing: $('#printingScene'), typewriter: $('.typewriter'), printingStatus: $('#printingStatus'), result: $('#resultPanel'), receiptPhoto: $('#receiptPhoto'),
+  printing: $('#printingScene'), typewriter: $('.typewriter-model'), keyboard: $('#modelKeyboard'), carriage: $('#typewriterCarriage'),
+  printingStatus: $('#printingStatus'), result: $('#resultPanel'), receiptPhoto: $('#receiptPhoto'),
   file: $('#fileInput'), capture: $('#captureCanvas'), export: $('#exportCanvas'), drop: $('#dropZone'), toast: $('#toast')
 };
 
@@ -24,6 +25,19 @@ const state = {
   quoteIndex: Math.floor(Math.random() * quotes.length), location: '此刻所在的地方', weather: '天气未记录',
   date: new Date(), objectUrl: null
 };
+
+const keyRows = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
+keyRows.forEach((row, rowIndex) => {
+  const keyRow = document.createElement('div');
+  keyRow.className = `model-key-row row-${rowIndex + 1}`;
+  [...row].forEach(letter => {
+    const key = document.createElement('span');
+    key.className = 'model-key';
+    key.textContent = letter;
+    keyRow.appendChild(key);
+  });
+  els.keyboard.appendChild(keyRow);
+});
 
 function detectDevice() {
   const coarse = matchMedia('(pointer: coarse)').matches;
@@ -51,7 +65,9 @@ function toast(message) {
 function playClick(frequency = 220, duration = .06) {
   if (!state.sound) return;
   try {
-    const context = new (window.AudioContext || window.webkitAudioContext)();
+    const AudioEngine = window.AudioContext || window.webkitAudioContext;
+    const context = playClick.context || (playClick.context = new AudioEngine());
+    if (context.state === 'suspended') context.resume();
     const oscillator = context.createOscillator();
     const gain = context.createGain();
     oscillator.type = 'triangle'; oscillator.frequency.value = frequency;
@@ -143,11 +159,25 @@ function weatherName(code) {
 async function makeReceipt() {
   showOnly('printing'); playClick(120, .12);
   els.typewriter.classList.add('is-typing');
+  const keys = [...els.keyboard.querySelectorAll('.model-key'), $('#modelSpacebar')];
+  let carriageStep = 0;
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const keyTimer = reduceMotion ? null : setInterval(() => {
+    const key = keys[Math.floor(Math.random() * keys.length)];
+    key.classList.remove('pressed');
+    void key.offsetWidth;
+    key.classList.add('pressed');
+    setTimeout(() => key.classList.remove('pressed'), 105);
+    carriageStep = (carriageStep + 1) % 13;
+    els.carriage.style.setProperty('--carriage-x', `${(carriageStep - 6) * .7}%`);
+    playClick(155 + Math.random() * 95, .035);
+  }, 115);
   const messages = ['正在读取今天的时间', '正在看看窗外的天气', '正在挑选今天的一句话', '正在排版你的照片'];
   let index = 0; els.printingStatus.textContent = messages[0];
   const timer = setInterval(() => { index = Math.min(index + 1, messages.length - 1); els.printingStatus.textContent = messages[index]; playClick(180 + index * 35); }, 700);
   await Promise.all([getContextInfo(), new Promise(resolve => setTimeout(resolve, 2850))]);
-  clearInterval(timer); els.typewriter.classList.remove('is-typing'); fillReceipt(); showOnly('result'); playClick(440, .18);
+  clearInterval(timer); if (keyTimer) clearInterval(keyTimer); els.typewriter.classList.remove('is-typing');
+  els.carriage.style.removeProperty('--carriage-x'); fillReceipt(); showOnly('result'); playClick(440, .18);
 }
 
 function fillReceipt() {
