@@ -164,10 +164,6 @@ async function makeReceipt() {
   els.printingActions.hidden = true;
   els.typedReceipt.classList.remove('is-printing', 'is-printed');
   els.printingStatus.textContent = '正在读取今天的信息';
-  await getContextInfo();
-  fillReceipt();
-  void els.typedReceipt.offsetWidth;
-  els.typedReceipt.classList.add('is-printing');
   els.typewriter.classList.add('is-typing');
   const keys = [...els.keyboard.querySelectorAll('.model-key'), $('#modelSpacebar')];
   let carriageStep = 0;
@@ -191,6 +187,10 @@ async function makeReceipt() {
   const messages = ['正在读取今天的时间', '正在看看窗外的天气', '正在挑选今天的一句话', '正在排版你的照片'];
   let index = 0; els.printingStatus.textContent = messages[0];
   const timer = setInterval(() => { index = Math.min(index + 1, messages.length - 1); els.printingStatus.textContent = messages[index]; playClick(180 + index * 35); }, 700);
+  await getContextInfo();
+  fillReceipt();
+  void els.typedReceipt.offsetWidth;
+  els.typedReceipt.classList.add('is-printing');
   await new Promise(resolve => setTimeout(resolve, 2850));
   clearInterval(timer); clearInterval(keyTimer); activeKey?.classList.remove('pressed'); els.typewriter.classList.remove('is-typing');
   els.carriage.style.removeProperty('--carriage-x'); els.typedReceipt.classList.remove('is-printing'); els.typedReceipt.classList.add('is-printed');

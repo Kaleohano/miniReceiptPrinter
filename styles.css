@@ -49,7 +49,7 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.38'/%3E%3C/svg%3E");
 }
 
-.app-shell { width: min(1440px, 100%); min-height: 100dvh; margin: auto; padding: 0 34px 38px; }
+.app-shell { width: min(1440px, 100%); height: 100dvh; margin: auto; padding: 0 34px; overflow: hidden; }
 .topbar { height: 72px; display: flex; align-items: center; justify-content: space-between; }
 .wordmark { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0; border: 0; color: var(--rose-dark); background: transparent; cursor: pointer; font-family: "Iowan Old Style", Baskerville, Georgia, serif; font-size: 19px; font-weight: 600; }
 .wordmark-mark { display: grid; place-items: center; width: 28px; height: 28px; border: 1.5px solid var(--rose); border-radius: 50%; background: rgba(255,253,248,.8); font: 700 13px/1 "Courier New", monospace; }
@@ -59,12 +59,12 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
 .icon-button:hover, .round-control:hover { background: var(--paper); transform: translateY(-2px); }
 .icon-button:active, .round-control:active { transform: translateY(1px) scale(.97); }
 
-.stage { position: relative; min-height: calc(100dvh - 72px); display: grid; place-items: center; }
+.stage { position: relative; height: calc(100dvh - 72px); min-height: 0; display: grid; place-items: center; overflow: hidden; }
 .intro-copy { position: absolute; z-index: 7; left: 50%; bottom: 92px; width: max-content; max-width: calc(100vw - 40px); transform: translateX(-50%); text-align: center; pointer-events: none; }
 .intro-copy p { margin: 0; color: var(--rose-dark); font-size: 13px; letter-spacing: .03em; }
 .eyebrow { margin: 0 0 12px; color: var(--rose); font: 700 11px/1.2 "Courier New", monospace; letter-spacing: .12em; }
 
-.device-scene { position: relative; width: 100%; min-height: 620px; display: flex; align-items: center; justify-content: center; }
+.device-scene { position: relative; width: 100%; height: 100%; min-height: 0; display: flex; align-items: center; justify-content: center; }
 .mobile-scene { display: none; }
 
 .primary-button, .secondary-button {
@@ -161,7 +161,7 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
 .spacer { width: 1px; }
 
 /* Preview */
-.preview-panel { width: min(950px, 100%); display: grid; grid-template-columns: minmax(280px, 470px) minmax(280px, 390px); align-items: center; justify-content: center; gap: clamp(52px, 8vw, 108px); padding: 44px 0 70px; }
+.preview-panel { width: min(950px, 100%); height: 100%; display: grid; grid-template-columns: minmax(280px, 470px) minmax(280px, 390px); align-items: center; justify-content: center; gap: clamp(52px, 8vw, 108px); padding: 24px 0; }
 .preview-photo-wrap { position: relative; padding: 13px 13px 48px; border: 1.5px solid var(--rose); background: var(--paper); box-shadow: 7px 9px 0 rgba(132,51,72,.09); transform: rotate(-1.4deg); }
 .preview-photo-wrap img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; filter: saturate(.88) contrast(1.03); }
 .preview-tape { position: absolute; top: -13px; left: 38%; width: 90px; height: 27px; background: rgba(246,216,222,.86); transform: rotate(2deg); }
@@ -170,7 +170,7 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
 .preview-copy .button-row { justify-content: flex-start; }
 
 /* Receipt printed in the machine */
-.printing-scene { width: 100%; display: flex; flex-direction: column; align-items: center; padding: 180px 0 50px; overflow: visible; }
+.printing-scene { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 120px 0 16px; overflow: hidden; }
 .printing-scene .receipt-in-typewriter { top: -34%; left: 23%; width: 54%; height: 92%; padding: 16px 19px 24px; }
 .typed-receipt { width: 100%; color: var(--rose-dark); opacity: 0; clip-path: inset(0 0 100% 0); }
 .typed-receipt.is-printing { opacity: 1; animation: typeReceiptContent 2.8s steps(18,end) forwards; }
@@ -201,7 +201,7 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
 @keyframes blink { 50% { opacity: .5; } }
 
 @media (max-height: 760px) and (min-width: 768px) {
-  .device-scene { min-height: 540px; }
+  .device-scene { min-height: 0; }
   .typewriter-model { width: min(540px, 80vw); height: 432px; }
   .model-shell { padding-top: 51px; }
   .model-key-row { gap: 11px; }
@@ -209,21 +209,25 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
   .model-key::after { top: 22px; }
   .support-text { bottom: 30px; }
   .intro-copy { bottom: 58px; }
+  .printing-scene { padding-top: 76px; }
+  .printing-actions { margin-top: 8px; }
+  .printing-actions > p { font-size: 25px; }
+  .printing-actions .button-row { margin-top: 10px; }
 }
 
 @media (max-width: 767px) {
-  .app-shell { padding: 0 18px 28px; }
+  .app-shell { height: 100dvh; padding: 0 18px; }
   .topbar { height: 64px; }
   .wordmark { font-size: 17px; }
   .device-label { display: none; }
-  .stage { min-height: calc(100dvh - 64px); display: flex; flex-direction: column; justify-content: flex-start; padding-top: 42px; }
+  .stage { height: calc(100dvh - 64px); min-height: 0; display: flex; flex-direction: column; justify-content: flex-start; padding-top: 32px; overflow: hidden; }
   .intro-copy { position: static; order: 2; width: auto; margin-top: 10px; transform: none; }
   .intro-copy p { font-size: 12px; }
   .desktop-scene { display: none; }
   .mobile-scene { position: relative; width: 100%; height: min(412px, 112.5vw); min-height: 0; display: block; order: 1; }
   .polaroid-wrap { position: absolute; top: 0; left: 50%; display: block; width: min(330px, 90vw); margin: 0; transform: translateX(-50%); }
-  .preview-panel { display: flex; flex-direction: column; width: 100%; gap: 34px; padding: 26px 0 48px; text-align: center; }
-  .preview-photo-wrap { width: min(340px, 88vw); padding: 10px 10px 38px; }
+  .preview-panel { height: 100%; display: flex; flex-direction: column; justify-content: center; width: 100%; gap: clamp(18px, 4dvh, 30px); padding: 10px 0 16px; text-align: center; }
+  .preview-photo-wrap { width: min(320px, 78vw, 42dvh); padding: 9px 9px 32px; }
   .preview-copy h2 { max-width: 11ch; margin-inline: auto; font-size: 38px; }
   .preview-copy > p:not(.eyebrow) { margin-inline: auto; }
   .preview-copy .button-row { justify-content: center; }
@@ -232,7 +236,7 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
   .camera-overlay { padding: 0; }
   .camera-panel { width: 100%; height: 100dvh; display: flex; flex-direction: column; border: 0; border-radius: 0; }
   .live-view { flex: 1; max-height: none; aspect-ratio: auto; }
-  .printing-scene { padding-top: 148px; }
+  .printing-scene { height: 100%; padding-top: 104px; padding-bottom: 8px; }
   .typewriter-model { width: min(480px, 96vw); height: 410px; }
   .model-shell { bottom: 6%; height: 42%; padding: 42px 16px 11px; }
   .model-key-row { gap: 7px; }
@@ -247,6 +251,34 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
   .receipt-info div { font-size: 7px; margin-block: 1px; }
   .receipt-in-typewriter blockquote { margin-block: 4px; font-size: 8px; }
   .printing-actions { margin-top: 12px; }
+}
+
+@media (max-width: 767px) and (max-height: 720px) {
+  .stage { padding-top: 18px; }
+  .mobile-scene { height: min(350px, 98vw); }
+  .polaroid-wrap { width: min(280px, 78vw); }
+  .intro-copy { margin-top: 4px; }
+  .preview-panel { gap: 14px; padding-block: 6px; }
+  .preview-photo-wrap { width: min(250px, 68vw, 36dvh); padding-bottom: 24px; }
+  .preview-copy h2 { font-size: 30px; }
+  .preview-copy > p:not(.eyebrow) { margin-top: 8px; font-size: 11px; }
+  .preview-copy .button-row { margin-top: 12px; }
+  .primary-button, .secondary-button { min-height: 44px; }
+  .printing-scene { padding-top: 84px; }
+  .printing-scene .typewriter-model { width: min(386px, 92vw); height: 330px; }
+  .printing-scene .model-shell { padding-top: 34px; }
+  .printing-scene .model-key-row { gap: 5px; }
+  .printing-scene .model-key { width: 19px; height: 19px; font-size: 6px; }
+  .printing-scene .model-key::after { top: 17px; height: 8px; }
+  .printing-scene .ribbon-deck { height: 40px; }
+  .printing-scene .ribbon-spool { width: 30px; height: 30px; }
+  .printing-scene .model-carriage { height: 34px; grid-template-columns: 32px 1fr 32px; }
+  .printing-scene .carriage-knob { height: 32px; }
+  .printing-scene .receipt-in-typewriter { top: -30%; height: 90%; }
+  .printing-status { margin-top: 4px; }
+  .printing-actions { margin-top: 5px; }
+  .printing-actions > p { font-size: 21px; }
+  .printing-actions .button-row { margin-top: 7px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
