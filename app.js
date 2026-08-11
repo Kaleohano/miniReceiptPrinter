@@ -134,12 +134,15 @@ async function getContextInfo() {
   state.location = '此刻所在的地方'; state.weather = '天气未记录';
   if (!navigator.geolocation) return;
   try {
-    const position = await new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 6500, maximumAge: 300000 }));
+    const position = await new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 1800, maximumAge: 600000 }));
     const { latitude, longitude } = position.coords;
+    const controller = new AbortController();
+    const stopRequests = setTimeout(() => controller.abort(), 1800);
     const [placeResult, weatherResult] = await Promise.allSettled([
-      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=13&accept-language=zh-CN`).then(r => r.ok ? r.json() : Promise.reject()),
-      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&timezone=auto`).then(r => r.ok ? r.json() : Promise.reject())
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=13&accept-language=zh-CN`, { signal: controller.signal }).then(r => r.ok ? r.json() : Promise.reject()),
+      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&timezone=auto`, { signal: controller.signal }).then(r => r.ok ? r.json() : Promise.reject())
     ]);
+    clearTimeout(stopRequests);
     if (placeResult.status === 'fulfilled') {
       const a = placeResult.value.address || {};
       state.location = a.city || a.town || a.county || a.state || '此刻所在的地方';
@@ -184,14 +187,14 @@ async function makeReceipt() {
     if (!reduceMotion) els.carriage.style.setProperty('--carriage-x', `${(carriageStep - 6) * .9}%`);
     playClick(155 + Math.random() * 95, .035);
   }, reduceMotion ? 440 : 120);
-  const messages = ['正在读取今天的时间', '正在看看窗外的天气', '正在挑选今天的一句话', '正在排版你的照片'];
+  const messages = ['正在打印照片', '正在补上日期与时间', '正在写下今天的一句话'];
   let index = 0; els.printingStatus.textContent = messages[0];
-  const timer = setInterval(() => { index = Math.min(index + 1, messages.length - 1); els.printingStatus.textContent = messages[index]; playClick(180 + index * 35); }, 700);
-  await getContextInfo();
+  const timer = setInterval(() => { index = Math.min(index + 1, messages.length - 1); els.printingStatus.textContent = messages[index]; playClick(180 + index * 35); }, 520);
   fillReceipt();
+  getContextInfo().then(() => fillReceipt());
   void els.typedReceipt.offsetWidth;
   els.typedReceipt.classList.add('is-printing');
-  await new Promise(resolve => setTimeout(resolve, 2850));
+  await new Promise(resolve => setTimeout(resolve, reduceMotion ? 80 : 1750));
   clearInterval(timer); clearInterval(keyTimer); activeKey?.classList.remove('pressed'); els.typewriter.classList.remove('is-typing');
   els.carriage.style.removeProperty('--carriage-x'); els.typedReceipt.classList.remove('is-printing'); els.typedReceipt.classList.add('is-printed');
   els.printing.classList.add('is-complete'); els.printingActions.hidden = false; els.printingStatus.textContent = '打印完成'; playClick(440, .18);
