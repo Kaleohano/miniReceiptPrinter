@@ -236,9 +236,9 @@ async function downloadReceipt() {
     if (row) rows.push(row); rows.slice(0, maxLines).forEach((value, index) => ctx.fillText(value, x, y + index * lineHeight));
   };
   ctx.fillStyle = blue; ctx.fillRect(0, 0, canvas.width, canvas.height);
-  const tileWidth = 600, tileHeight = tileWidth * pattern.height / pattern.width;
+  const tileWidth = 400, tileHeight = tileWidth * pattern.height / pattern.width;
   for (let y = 0; y < canvas.height; y += tileHeight) for (let x = 0; x < canvas.width; x += tileWidth) ctx.drawImage(pattern, x, y, tileWidth, tileHeight);
-  ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'rgba(255,255,255,.4)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   ctx.save(); ctx.shadowColor = 'rgba(201,94,115,.14)'; ctx.shadowOffsetX = 10; ctx.shadowOffsetY = 12;
   ctx.fillStyle = paper; rounded(300, 55, 600, 800, 8); ctx.fill(); ctx.restore();
