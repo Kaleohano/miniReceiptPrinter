@@ -202,18 +202,26 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
 
 @media (max-height: 760px) and (min-width: 768px) {
   .device-scene { min-height: 0; }
-  .typewriter-model { width: min(540px, 80vw); height: 432px; }
-  .model-shell { padding-top: 51px; }
-  .model-key-row { gap: 11px; }
-  .model-key { width: 25px; height: 25px; }
-  .model-key::after { top: 22px; }
+  .typewriter-model { width: min(460px, 72vw); height: 368px; }
+  .model-shell { padding: 39px 27px 10px; }
+  .model-keyboard { gap: 4px; }
+  .model-key-row { gap: 9px; }
+  .model-key { width: 22px; height: 22px; font-size: 7px; }
+  .model-key::after { top: 19px; height: 9px; }
+  .model-carriage { height: 36px; grid-template-columns: 36px 1fr 36px; }
+  .carriage-knob { height: 34px; }
+  .ribbon-deck { height: 42px; }
+  .ribbon-spool { width: 33px; height: 33px; }
   .support-text { bottom: 30px; }
   .intro-copy { bottom: 58px; }
-  .printing-scene { padding-top: 62px; }
-  .printing-scene .receipt-in-typewriter { top: -13%; height: 72%; }
-  .printing-actions { margin-top: 8px; }
-  .printing-actions > p { font-size: 25px; }
-  .printing-actions .button-row { margin-top: 10px; }
+  .printing-scene { padding-top: 42px; }
+  .printing-scene .receipt-in-typewriter { top: -10%; height: 76%; padding: 12px 15px 18px; }
+  .printing-scene .typed-receipt { width: 122%; margin-left: -11%; transform: scale(.82); transform-origin: center top; }
+  .printing-status { margin-top: 2px; }
+  .printing-actions { margin-top: 3px; }
+  .printing-actions > p { font-size: 22px; }
+  .printing-actions .button-row { margin-top: 7px; }
+  .printing-actions .primary-button, .printing-actions .secondary-button { min-height: 42px; padding-inline: 18px; }
 }
 
 @media (max-width: 767px) {
