@@ -2380,11 +2380,11 @@ body {
 body {
   background-color: #dcebf1;
   background-image:
-    linear-gradient(rgba(255, 255, 255, .42), rgba(255, 255, 255, .42)),
+    linear-gradient(rgba(255, 255, 255, .62), rgba(255, 255, 255, .62)),
     url("assets/checker-grid.jpg");
   background-repeat: repeat;
   background-position: center top;
-  background-size: 360px 172px;
+  background-size: 220px 105px;
 }
 
 .grain { opacity: .018; }
