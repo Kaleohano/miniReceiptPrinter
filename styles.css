@@ -190,6 +190,7 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
 .printing-status { min-height: 22px; margin: 12px 0 0; padding: 4px 11px; color: var(--muted); background: rgba(255,253,248,.7); font-size: 12px; animation: blink 1.1s ease-in-out infinite; }
 .printing-scene.is-complete .printing-status { animation: none; }
 .printing-actions { width: min(620px, 100%); margin-top: 10px; text-align: center; }
+.printing-scene.is-complete .printing-status, .printing-scene.is-complete .printing-actions { position: relative; top: -10px; }
 .printing-actions .button-row { margin-top: 14px; }
 .printing-actions > p { margin: 0; color: var(--rose-dark); font-family: "Iowan Old Style", Baskerville, Georgia, serif; font-size: clamp(24px, 3vw, 34px); }
 
