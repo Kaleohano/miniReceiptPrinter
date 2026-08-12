@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#c9edf0" />
     <meta name="description" content="把一张照片打印成一份属于今天的电子小票。" />
     <title>Today's Receipt</title>
-    <link rel="stylesheet" href="styles.css?v=20260812-2" />
+    <link rel="stylesheet" href="styles.css?v=20260812-3" />
   </head>
   <body>
     <div class="grain" aria-hidden="true"></div>
@@ -35,18 +35,21 @@
               <span class="polaroid-face polaroid-front">
                 <span class="drawn-camera drawn-camera-front">
                   <span class="drawn-camera-bump"></span><span class="drawn-camera-body"></span>
-                  <span class="drawn-flash"></span><span class="drawn-viewfinder"></span>
-                  <span class="drawn-lens"><i></i></span><span class="drawn-shutter"></span>
-                  <span class="drawn-brand">TODAY</span><span class="drawn-slot"></span>
+                  <span class="camera-seam"></span><span class="camera-grip"></span>
+                  <span class="drawn-flash"><i></i></span><span class="drawn-viewfinder"><i></i></span>
+                  <span class="drawn-lens"><i></i><b></b></span><span class="drawn-shutter"><i></i></span>
+                  <span class="drawn-brand">TODAY <small>instant 01</small></span><span class="camera-counter">08</span>
+                  <span class="drawn-slot"><i></i></span>
                 </span>
                 <span class="camera-caption">轻触相机开始</span>
               </span>
               <span class="polaroid-face polaroid-back">
                 <span class="drawn-camera drawn-camera-rear">
                   <span class="drawn-camera-bump"></span><span class="drawn-camera-body"></span>
-                  <span class="drawn-rear-screen"><i></i></span><span class="drawn-rear-eye"></span>
+                  <span class="camera-seam"></span><span class="camera-grip"></span>
+                  <span class="drawn-rear-screen"><i></i><b></b></span><span class="drawn-rear-eye"><i></i></span>
                   <span class="drawn-rear-button button-one"></span><span class="drawn-rear-button button-two"></span>
-                  <span class="drawn-slot"></span>
+                  <span class="camera-counter">08</span><span class="drawn-slot"><i></i></span>
                 </span>
                 <span class="camera-caption">正在打开取景框</span>
               </span>
@@ -57,10 +60,11 @@
         <section class="device-scene desktop-scene" id="desktopScene" hidden>
           <div class="typewriter-model hero-typewriter" aria-hidden="true">
             <div class="model-paper"><span>TODAY'S RECEIPT</span><i></i><i></i><i></i><i></i></div>
+            <span class="paper-guide guide-left"></span><span class="paper-guide guide-right"></span>
             <span class="return-lever"></span>
             <div class="model-carriage"><span class="carriage-knob"></span><span class="carriage-rail"></span><span class="carriage-knob"></span></div>
-            <div class="ribbon-deck"><span class="ribbon-spool"></span><span class="type-guide"></span><span class="ribbon-spool"></span></div>
-            <div class="model-shell"><div class="model-brand">TODAY</div><div class="model-keyboard"></div><span class="model-spacebar"></span><i class="machine-foot foot-left"></i><i class="machine-foot foot-right"></i></div>
+            <div class="ribbon-deck"><span class="ribbon-spool"><i></i></span><span class="type-guide"></span><span class="ribbon-spool"><i></i></span></div>
+            <div class="model-shell"><span class="shell-highlight"></span><span class="keywell"></span><div class="model-brand">TODAY <small>portable no. 1</small></div><div class="model-keyboard"></div><span class="model-spacebar"></span><i class="machine-foot foot-left"></i><i class="machine-foot foot-right"></i></div>
           </div>
           <button class="primary-button upload-only-button" id="desktopUploadButton" type="button" aria-label="上传照片" title="上传照片">
             <span class="upload-icon" aria-hidden="true">↑</span>
@@ -124,15 +128,17 @@
                 <div class="receipt-footer"><span>THANK YOU FOR TODAY</span><span>///// // ////</span></div>
               </div>
             </div>
+            <span class="paper-guide guide-left"></span><span class="paper-guide guide-right"></span>
             <div class="model-carriage" id="typewriterCarriage">
               <span class="carriage-knob"></span>
               <span class="carriage-rail"></span>
               <span class="carriage-knob"></span>
             </div>
             <span class="return-lever"></span>
-            <div class="ribbon-deck"><span class="ribbon-spool"></span><span class="type-guide"></span><span class="ribbon-spool"></span></div>
+            <div class="ribbon-deck"><span class="ribbon-spool"><i></i></span><span class="type-guide"></span><span class="ribbon-spool"><i></i></span></div>
             <div class="model-shell">
-              <div class="model-brand">TODAY</div>
+              <span class="shell-highlight"></span><span class="keywell"></span>
+              <div class="model-brand">TODAY <small>portable no. 1</small></div>
               <div class="model-keyboard" id="modelKeyboard"></div>
               <span class="model-spacebar" id="modelSpacebar"></span>
               <i class="machine-foot foot-left"></i><i class="machine-foot foot-right"></i>
@@ -156,6 +162,6 @@
       </section>
     </main>
     <div class="toast" id="toast" role="status" hidden></div>
-    <script src="app.js?v=20260811-5"></script>
+    <script src="app.js?v=20260812-3"></script>
   </body>
 </html>
