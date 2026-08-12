@@ -202,7 +202,7 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
 
 @media (max-height: 760px) and (min-width: 768px) {
   .device-scene { min-height: 0; }
-  .typewriter-model { width: min(460px, 72vw); height: 368px; }
+  .typewriter-model { width: min(430px, 68vw); height: 344px; }
   .model-shell { padding: 39px 27px 10px; }
   .model-keyboard { gap: 4px; }
   .model-key-row { gap: 9px; }
@@ -214,9 +214,9 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
   .ribbon-spool { width: 33px; height: 33px; }
   .support-text { bottom: 30px; }
   .intro-copy { bottom: 58px; }
-  .printing-scene { padding-top: 42px; }
-  .printing-scene .receipt-in-typewriter { top: -10%; height: 76%; padding: 12px 15px 18px; }
-  .printing-scene .typed-receipt { width: 122%; margin-left: -11%; transform: scale(.82); transform-origin: center top; }
+  .printing-scene { padding-top: 70px; }
+  .printing-scene .receipt-in-typewriter { top: -10%; height: 78%; padding: 12px 15px 18px; }
+  .printing-scene .typed-receipt { width: 128%; margin-left: -14%; transform: scale(.78); transform-origin: center top; }
   .printing-status { margin-top: 2px; }
   .printing-actions { margin-top: 3px; }
   .printing-actions > p { font-size: 22px; }
