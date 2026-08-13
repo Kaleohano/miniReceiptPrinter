@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#c9edf0" />
     <meta name="description" content="把一张照片打印成一份属于今天的电子小票。" />
     <title>Today's Receipt</title>
-    <link rel="stylesheet" href="styles.css?v=20260812-3" />
+    <link rel="stylesheet" href="styles.css?v=20260813-1" />
   </head>
   <body>
     <div class="grain" aria-hidden="true"></div>
@@ -29,35 +29,7 @@
           <p>把一张照片，打印成今天的纪念。</p>
         </div>
 
-        <section class="device-scene mobile-scene" id="mobileScene" hidden>
-          <button class="polaroid-wrap" id="polaroidButton" type="button" aria-label="打开宝丽莱相机">
-            <span class="polaroid-card">
-              <span class="polaroid-face polaroid-front">
-                <span class="drawn-camera drawn-camera-front">
-                  <span class="drawn-camera-bump"></span><span class="drawn-camera-body"></span>
-                  <span class="camera-seam"></span><span class="camera-grip"></span>
-                  <span class="drawn-flash"><i></i></span><span class="drawn-viewfinder"><i></i></span>
-                  <span class="drawn-lens"><i></i><b></b></span><span class="drawn-shutter"><i></i></span>
-                  <span class="drawn-brand">TODAY <small>instant 01</small></span><span class="camera-counter">08</span>
-                  <span class="drawn-slot"><i></i></span>
-                </span>
-                <span class="camera-caption">轻触相机开始</span>
-              </span>
-              <span class="polaroid-face polaroid-back">
-                <span class="drawn-camera drawn-camera-rear">
-                  <span class="drawn-camera-bump"></span><span class="drawn-camera-body"></span>
-                  <span class="camera-seam"></span><span class="camera-grip"></span>
-                  <span class="drawn-rear-screen"><i></i><b></b></span><span class="drawn-rear-eye"><i></i></span>
-                  <span class="drawn-rear-button button-one"></span><span class="drawn-rear-button button-two"></span>
-                  <span class="camera-counter">08</span><span class="drawn-slot"><i></i></span>
-                </span>
-                <span class="camera-caption">正在打开取景框</span>
-              </span>
-            </span>
-          </button>
-        </section>
-
-        <section class="device-scene desktop-scene" id="desktopScene" hidden>
+        <section class="device-scene upload-scene" id="uploadScene">
           <div class="typewriter-model hero-typewriter" aria-hidden="true">
             <div class="model-paper"><span>TODAY'S RECEIPT</span><i></i><i></i><i></i><i></i></div>
             <span class="paper-guide guide-left"></span><span class="paper-guide guide-right"></span>
@@ -66,31 +38,11 @@
             <div class="ribbon-deck"><span class="ribbon-spool"><i></i></span><span class="type-guide"></span><span class="ribbon-spool"><i></i></span></div>
             <div class="model-shell"><span class="shell-highlight"></span><span class="keywell"></span><div class="model-brand">TODAY <small>portable no. 1</small></div><div class="model-keyboard"></div><span class="model-spacebar"></span><i class="machine-foot foot-left"></i><i class="machine-foot foot-right"></i></div>
           </div>
-          <button class="primary-button upload-only-button" id="desktopUploadButton" type="button" aria-label="上传照片" title="上传照片">
+          <button class="primary-button upload-only-button" id="uploadButton" type="button" aria-label="上传照片" title="上传照片">
             <span class="upload-icon" aria-hidden="true">↑</span>
             <span class="sr-only">上传照片</span>
           </button>
           <p class="support-text">支持 JPG、PNG、WEBP，也可以直接拖到这里</p>
-        </section>
-
-        <section class="camera-overlay" id="cameraOverlay" hidden>
-          <div class="camera-panel">
-            <div class="camera-panel-top">
-              <button class="round-control" id="closeCameraButton" type="button" aria-label="关闭相机">×</button>
-              <span>后置相机</span>
-              <button class="round-control" id="switchCameraButton" type="button" aria-label="切换摄像头">↻</button>
-            </div>
-            <div class="live-view">
-              <video id="cameraVideo" autoplay playsinline muted></video>
-              <div class="focus-frame" aria-hidden="true"></div>
-              <div class="camera-message" id="cameraMessage" hidden></div>
-            </div>
-            <div class="camera-panel-bottom">
-              <button class="gallery-button" id="mobileUploadButton" type="button">相册</button>
-              <button class="shutter" id="shutterButton" type="button" aria-label="拍照"><span></span></button>
-              <span class="spacer"></span>
-            </div>
-          </div>
         </section>
 
         <section class="preview-panel" id="previewPanel" hidden>
@@ -157,11 +109,10 @@
 
         <div class="drop-zone" id="dropZone" hidden>松开照片，开始制作</div>
         <input id="fileInput" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" hidden />
-        <canvas id="captureCanvas" hidden></canvas>
         <canvas id="exportCanvas" hidden></canvas>
       </section>
     </main>
     <div class="toast" id="toast" role="status" hidden></div>
-    <script src="app.js?v=20260812-3"></script>
+    <script src="app.js?v=20260813-1"></script>
   </body>
 </html>
