@@ -151,10 +151,11 @@ async function makeReceipt() {
     if (carriageStep > 12) {
       carriageStep = 0;
       els.carriage.classList.add('is-returning');
-      if (!reduceMotion) els.carriage.style.setProperty('--carriage-x', '-5.4%');
+      if (!reduceMotion) els.carriage.style.setProperty('--carriage-x', state.isMobile ? '-2%' : '-5.4%');
       setTimeout(() => els.carriage.classList.remove('is-returning'), 170);
     } else if (!reduceMotion) {
-      els.carriage.style.setProperty('--carriage-x', `${(carriageStep - 6) * .9}%`);
+      const carriageTravel = state.isMobile ? .3 : .9;
+      els.carriage.style.setProperty('--carriage-x', `${(carriageStep - 6) * carriageTravel}%`);
     }
     playClick(155 + Math.random() * 95, .035);
   }, reduceMotion ? 440 : 120);

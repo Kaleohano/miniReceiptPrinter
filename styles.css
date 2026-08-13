@@ -225,6 +225,8 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
   .button-row button { flex: 1 1 120px; padding-inline: 15px; }
   .printing-scene { height: 100%; padding-top: 82px; padding-bottom: 8px; }
   .typewriter-model { width: min(430px, 96vw); height: 410px; }
+  .typewriter-model .model-carriage { left: 0; width: 100%; }
+  .typewriter-model .return-lever { left: 0; width: 27%; }
   .model-shell { bottom: 5%; height: 48%; padding: 50px 19px 12px; }
   .model-key-row { gap: 6px; }
   .model-key { width: 22px; height: 21px; font-size: 6px; }
