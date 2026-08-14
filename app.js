@@ -22,7 +22,7 @@ const quotes = [
 ];
 
 const state = {
-  isMobile: false, imageUrl: '', stickerUrl: '', processingId: 0, sound: true,
+  isMobile: false, imageUrl: '', stickerUrl: '', exportBlob: null, processingId: 0, sound: true,
   quoteIndex: Math.floor(Math.random() * quotes.length), location: '此刻所在的地方', weather: '天气未记录',
   date: new Date(), objectUrl: null
 };
@@ -48,6 +48,7 @@ function detectDevice() {
   const mobileUA = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
   state.isMobile = narrow || (coarse && mobileUA);
   els.device.textContent = state.isMobile ? '手机模式' : '电脑模式';
+  $('#downloadButton').textContent = state.isMobile ? '保存到相册' : '保存小票';
 }
 
 function showOnly(name) {
@@ -118,7 +119,7 @@ async function handleFile(file) {
 }
 
 function setPhoto(url, dimensions, processing = false) {
-  state.imageUrl = url; state.date = new Date();
+  state.imageUrl = url; state.exportBlob = null; state.date = new Date();
   els.previewImage.src = url; els.receiptPhoto.src = url;
   els.photoMeta.dataset.dimensions = dimensions;
   showOnly('preview');
@@ -268,13 +269,18 @@ async function makeReceipt() {
   let index = 0; els.printingStatus.textContent = messages[0];
   const timer = setInterval(() => { index = Math.min(index + 1, messages.length - 1); els.printingStatus.textContent = messages[index]; playClick(180 + index * 35); }, 520);
   fillReceipt();
-  getContextInfo().then(() => fillReceipt());
+  getContextInfo().then(() => {
+    fillReceipt();
+    if (!els.printingActions.hidden) renderReceiptBlob().then(blob => { state.exportBlob = blob; }).catch(() => {});
+  });
   void els.typedReceipt.offsetWidth;
   els.typedReceipt.classList.add('is-printing');
   await new Promise(resolve => setTimeout(resolve, reduceMotion ? 80 : 1750));
   clearInterval(timer); clearInterval(keyTimer); activeKey?.classList.remove('pressed'); els.typewriter.classList.remove('is-typing'); els.carriage.classList.remove('is-returning');
   els.carriage.style.removeProperty('--carriage-x'); els.typedReceipt.classList.remove('is-printing'); els.typedReceipt.classList.add('is-printed');
-  els.printing.classList.add('is-complete'); els.printingActions.hidden = false; els.printingStatus.textContent = '打印完成'; playClick(440, .18);
+  els.printing.classList.add('is-complete'); els.printingStatus.textContent = '正在准备保存图片';
+  try { state.exportBlob = await renderReceiptBlob(); } catch (_) { state.exportBlob = null; }
+  els.printingActions.hidden = false; els.printingStatus.textContent = '打印完成'; playClick(440, .18);
 }
 
 function fillReceipt() {
@@ -286,7 +292,10 @@ function fillReceipt() {
   $('#receiptNumber').textContent = `NO. ${String(d.getMonth() + 1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}${String(d.getHours()).padStart(2,'0')}${String(d.getMinutes()).padStart(2,'0')}`;
 }
 
-function changeQuote() { state.quoteIndex = (state.quoteIndex + 1) % quotes.length; fillReceipt(); playClick(330); }
+function changeQuote() {
+  state.quoteIndex = (state.quoteIndex + 1) % quotes.length; state.exportBlob = null; fillReceipt(); playClick(330);
+  renderReceiptBlob().then(blob => { state.exportBlob = blob; }).catch(() => {});
+}
 
 function drawContain(ctx, image, x, y, width, height) {
   const scale = Math.min(width / image.width, height / image.height);
@@ -294,7 +303,7 @@ function drawContain(ctx, image, x, y, width, height) {
   ctx.drawImage(image, x + (width - drawWidth) / 2, y + (height - drawHeight) / 2, drawWidth, drawHeight);
 }
 
-async function downloadReceipt() {
+async function renderReceiptBlob() {
   const canvas = els.export, ctx = canvas.getContext('2d'); canvas.width = 1200; canvas.height = 1400;
   const rose = '#c3474d', pale = '#fff8f5', paper = '#fffdf8', blue = '#cfecef';
   const image = new Image(); image.crossOrigin = 'anonymous';
@@ -359,12 +368,39 @@ async function downloadReceipt() {
   });
   ctx.fillStyle = '#272321'; ctx.strokeStyle = '#171514'; ctx.lineWidth = 3; rounded(440, 1180, 320, 30, 4); ctx.fill(); ctx.stroke();
   ctx.fillStyle = '#7f2932'; ctx.textAlign = 'center'; ctx.font = 'bold 24px sans-serif'; ctx.fillText("TODAY'S RECEIPT", 600, 1315);
-  const link = document.createElement('a'); link.download = `今日打字机小票-${Date.now()}.png`; link.href = canvas.toDataURL('image/png'); link.click();
-  ctx.textAlign = 'left'; toast('小票已经保存'); playClick(520, .15);
+  const blob = await new Promise((resolve, reject) => canvas.toBlob(value => value ? resolve(value) : reject(new Error('Receipt export failed')), 'image/png'));
+  ctx.textAlign = 'left'; return blob;
+}
+
+async function saveReceipt() {
+  const filename = `今日打字机小票-${Date.now()}.png`;
+  const blob = state.exportBlob || await renderReceiptBlob();
+  state.exportBlob = blob;
+  if (state.isMobile && navigator.canShare) {
+    const file = new File([blob], filename, { type: 'image/png' });
+    if (navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title: "Today's Receipt" });
+        toast('已完成系统保存操作'); playClick(520, .15); return;
+      } catch (error) {
+        if (error.name === 'AbortError') return;
+      }
+    }
+  }
+  downloadBlob(blob, filename);
+  toast(state.isMobile ? '浏览器不支持直接存入相册，已改为下载图片' : '小票已经保存');
+  playClick(520, .15);
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.download = filename; link.href = url; link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 function reset() {
-  state.processingId += 1; state.imageUrl = ''; state.location = '此刻所在的地方'; state.weather = '天气未记录';
+  state.processingId += 1; state.imageUrl = ''; state.exportBlob = null; state.location = '此刻所在的地方'; state.weather = '天气未记录';
   if (state.objectUrl) URL.revokeObjectURL(state.objectUrl);
   if (state.stickerUrl) URL.revokeObjectURL(state.stickerUrl);
   state.objectUrl = null; state.stickerUrl = '';
@@ -377,7 +413,7 @@ $('#makeReceiptButton').addEventListener('click', makeReceipt);
 $('#redoButton').addEventListener('click', reset);
 $('#homeButton').addEventListener('click', reset);
 $('#changeQuoteButton').addEventListener('click', changeQuote);
-$('#downloadButton').addEventListener('click', () => downloadReceipt().catch(() => toast('保存失败，请稍后重试')));
+$('#downloadButton').addEventListener('click', () => saveReceipt().catch(() => toast('保存失败，请稍后重试')));
 $('#soundButton').addEventListener('click', (event) => { state.sound = !state.sound; event.currentTarget.querySelector('span').textContent = state.sound ? '♪' : '×'; event.currentTarget.setAttribute('aria-label', state.sound ? '关闭声音' : '打开声音'); });
 els.file.addEventListener('change', event => handleFile(event.target.files[0]));
 
