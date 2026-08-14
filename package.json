@@ -1,0 +1,16 @@
+{
+  "name": "todays-receipt",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "esbuild app.js --bundle --minify --format=iife --target=es2020 --outfile=dist/app.js && cp index.html styles.css README.md dist/ && cp -R assets dist/"
+  },
+  "dependencies": {
+    "@imgly/background-removal": "1.7.0",
+    "onnxruntime-web": "1.21.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.8"
+  }
+}

@@ -1,8 +1,10 @@
+import { removeBackground } from '@imgly/background-removal';
+
 const $ = (selector) => document.querySelector(selector);
 
 const els = {
   stage: $('#stage'), intro: $('#introCopy'), upload: $('#uploadScene'), device: $('#deviceLabel'),
-  preview: $('#previewPanel'), previewImage: $('#previewImage'), photoMeta: $('#photoMeta'),
+  preview: $('#previewPanel'), previewImage: $('#previewImage'), photoMeta: $('#photoMeta'), subjectStatus: $('#subjectStatus'),
   printing: $('#printingScene'), typewriter: $('#printingScene .typewriter-model'), keyboard: $('#modelKeyboard'), carriage: $('#typewriterCarriage'),
   printingStatus: $('#printingStatus'), printingActions: $('#printingActions'), typedReceipt: $('#typedReceipt'), receiptPhoto: $('#receiptPhoto'),
   file: $('#fileInput'), export: $('#exportCanvas'), drop: $('#dropZone'), toast: $('#toast')
@@ -20,7 +22,7 @@ const quotes = [
 ];
 
 const state = {
-  isMobile: false, imageUrl: '', sound: true,
+  isMobile: false, imageUrl: '', stickerUrl: '', processingId: 0, sound: true,
   quoteIndex: Math.floor(Math.random() * quotes.length), location: '此刻所在的地方', weather: '天气未记录',
   date: new Date(), objectUrl: null
 };
@@ -76,22 +78,125 @@ function playClick(frequency = 220, duration = .06) {
   } catch (_) { /* sound is optional */ }
 }
 
-function handleFile(file) {
+async function handleFile(file) {
   if (!file || !file.type.startsWith('image/')) { toast('请选择一张图片文件'); return; }
   if (file.size > 18 * 1024 * 1024) { toast('照片有点大，请选择 18MB 以内的图片'); return; }
   if (state.objectUrl) URL.revokeObjectURL(state.objectUrl);
+  if (state.stickerUrl) URL.revokeObjectURL(state.stickerUrl);
   state.objectUrl = URL.createObjectURL(file);
+  state.stickerUrl = '';
+  const processingId = ++state.processingId;
   const image = new Image();
-  image.onload = () => setPhoto(state.objectUrl, `${image.naturalWidth} × ${image.naturalHeight}`);
+  image.onload = async () => {
+    const dimensions = `${image.naturalWidth} × ${image.naturalHeight}`;
+    setPhoto(state.objectUrl, dimensions, true);
+    try {
+      const cutoutBlob = await removeBackground(file, {
+        model: 'small',
+        device: 'cpu',
+        output: { format: 'image/png', quality: 1 },
+        progress: (key, current, total) => {
+          if (processingId !== state.processingId || !total) return;
+          const progress = Math.min(99, Math.round(current / total * 100));
+          els.subjectStatus.textContent = `正在准备抠图模型 ${progress}%`;
+        }
+      });
+      if (processingId !== state.processingId) return;
+      const stickerBlob = await createStickerBlob(cutoutBlob);
+      if (processingId !== state.processingId) return;
+      state.stickerUrl = URL.createObjectURL(stickerBlob);
+      setPhoto(state.stickerUrl, dimensions, false);
+    } catch (error) {
+      if (processingId !== state.processingId) return;
+      console.warn('Subject extraction failed:', error);
+      finishPhotoProcessing(false);
+      toast('主体识别失败，已保留原照片');
+    }
+  };
   image.onerror = () => toast('暂时无法读取这张照片，请换一张试试');
   image.src = state.objectUrl;
 }
 
-function setPhoto(url, dimensions = '现场拍摄') {
+function setPhoto(url, dimensions, processing = false) {
   state.imageUrl = url; state.date = new Date();
   els.previewImage.src = url; els.receiptPhoto.src = url;
-  els.photoMeta.textContent = `${dimensions}，照片只在你的浏览器中处理。`;
+  els.photoMeta.dataset.dimensions = dimensions;
   showOnly('preview');
+  if (processing) {
+    els.preview.classList.add('is-processing');
+    els.subjectStatus.hidden = false;
+    els.subjectStatus.textContent = '正在识别照片主体';
+    $('#makeReceiptButton').disabled = true;
+    els.photoMeta.textContent = `${dimensions}，正在本地制作贴纸。首次使用需要加载模型。`;
+  } else {
+    finishPhotoProcessing(true);
+  }
+}
+
+function finishPhotoProcessing(succeeded) {
+  els.preview.classList.remove('is-processing');
+  els.subjectStatus.hidden = true;
+  $('#makeReceiptButton').disabled = false;
+  const dimensions = els.photoMeta.dataset.dimensions || '照片';
+  els.photoMeta.textContent = succeeded
+    ? `${dimensions}，主体贴纸已生成，照片只在你的浏览器中处理。`
+    : `${dimensions}，已使用原照片，照片只在你的浏览器中处理。`;
+}
+
+async function createStickerBlob(cutoutBlob) {
+  const source = await blobToImage(cutoutBlob);
+  const scan = document.createElement('canvas');
+  scan.width = source.naturalWidth; scan.height = source.naturalHeight;
+  const scanContext = scan.getContext('2d', { willReadFrequently: true });
+  scanContext.drawImage(source, 0, 0);
+  const pixels = scanContext.getImageData(0, 0, scan.width, scan.height).data;
+  let minX = scan.width, minY = scan.height, maxX = 0, maxY = 0;
+  for (let y = 0; y < scan.height; y += 2) {
+    for (let x = 0; x < scan.width; x += 2) {
+      if (pixels[(y * scan.width + x) * 4 + 3] > 18) {
+        minX = Math.min(minX, x); minY = Math.min(minY, y);
+        maxX = Math.max(maxX, x); maxY = Math.max(maxY, y);
+      }
+    }
+  }
+  if (minX > maxX || minY > maxY) throw new Error('No foreground detected');
+  const cropWidth = maxX - minX + 1, cropHeight = maxY - minY + 1;
+  const scale = Math.min(1, 960 / Math.max(cropWidth, cropHeight));
+  const outline = Math.max(10, Math.round(Math.max(cropWidth, cropHeight) * scale * .025));
+  const padding = outline * 2;
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.ceil(cropWidth * scale + padding * 2);
+  canvas.height = Math.ceil(cropHeight * scale + padding * 2);
+  const context = canvas.getContext('2d');
+  const drawX = padding - minX * scale, drawY = padding - minY * scale;
+  context.save();
+  context.globalAlpha = .18;
+  context.filter = `brightness(0) blur(${Math.max(3, outline * .35)}px)`;
+  context.drawImage(source, drawX + outline * .45, drawY + outline * .65, source.naturalWidth * scale, source.naturalHeight * scale);
+  context.restore();
+  context.save();
+  context.globalCompositeOperation = 'source-over';
+  context.filter = 'brightness(0) invert(1)';
+  const samples = 36;
+  for (let radius = outline; radius >= outline * .45; radius -= Math.max(2, outline * .22)) {
+    for (let index = 0; index < samples; index += 1) {
+      const angle = Math.PI * 2 * index / samples;
+      context.drawImage(source, drawX + Math.cos(angle) * radius, drawY + Math.sin(angle) * radius, source.naturalWidth * scale, source.naturalHeight * scale);
+    }
+  }
+  context.restore();
+  context.drawImage(source, drawX, drawY, source.naturalWidth * scale, source.naturalHeight * scale);
+  return new Promise((resolve, reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Sticker export failed')), 'image/png'));
+}
+
+function blobToImage(blob) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(blob);
+    const image = new Image();
+    image.onload = () => { URL.revokeObjectURL(url); resolve(image); };
+    image.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Cutout image failed to load')); };
+    image.src = url;
+  });
 }
 
 async function getContextInfo() {
@@ -183,10 +288,10 @@ function fillReceipt() {
 
 function changeQuote() { state.quoteIndex = (state.quoteIndex + 1) % quotes.length; fillReceipt(); playClick(330); }
 
-function drawCover(ctx, image, x, y, width, height) {
-  const scale = Math.max(width / image.width, height / image.height);
-  const sw = width / scale, sh = height / scale;
-  ctx.drawImage(image, (image.width - sw) / 2, (image.height - sh) / 2, sw, sh, x, y, width, height);
+function drawContain(ctx, image, x, y, width, height) {
+  const scale = Math.min(width / image.width, height / image.height);
+  const drawWidth = image.width * scale, drawHeight = image.height * scale;
+  ctx.drawImage(image, x + (width - drawWidth) / 2, y + (height - drawHeight) / 2, drawWidth, drawHeight);
 }
 
 async function downloadReceipt() {
@@ -221,7 +326,7 @@ async function downloadReceipt() {
   ctx.fillStyle = '#7f2932'; ctx.textBaseline = 'top'; ctx.font = 'bold 28px monospace'; ctx.fillText("TODAY'S RECEIPT", 340, 92);
   ctx.textAlign = 'right'; ctx.font = '16px monospace'; ctx.fillText($('#receiptNumber').textContent, 860, 100); ctx.textAlign = 'left';
   ctx.setLineDash([10, 8]); line(340, 143, 860, 143, 2); ctx.setLineDash([]);
-  ctx.save(); ctx.translate(600, 320); ctx.rotate(-.018); ctx.fillStyle = '#f7dfe3'; ctx.fillRect(-215, -142, 430, 284); drawCover(ctx, image, -202, -129, 404, 258); ctx.restore();
+  ctx.save(); ctx.translate(600, 320); ctx.rotate(-.018); drawContain(ctx, image, -202, -129, 404, 258); ctx.restore();
   const rows = [['日期', $('#receiptDate').textContent], ['时间', $('#receiptTime').textContent], ['地点', state.location], ['天气', state.weather]];
   ctx.setLineDash([8, 7]); line(340, 480, 860, 480, 2); ctx.setLineDash([]);
   rows.forEach((row, i) => { const y = 510 + i * 43; ctx.fillStyle = '#c3474d'; ctx.font = '18px sans-serif'; ctx.fillText(row[0], 350, y); ctx.fillStyle = '#7f2932'; ctx.textAlign = 'right'; ctx.fillText(row[1], 850, y); ctx.textAlign = 'left'; });
@@ -259,7 +364,10 @@ async function downloadReceipt() {
 }
 
 function reset() {
-  state.imageUrl = ''; state.location = '此刻所在的地方'; state.weather = '天气未记录';
+  state.processingId += 1; state.imageUrl = ''; state.location = '此刻所在的地方'; state.weather = '天气未记录';
+  if (state.objectUrl) URL.revokeObjectURL(state.objectUrl);
+  if (state.stickerUrl) URL.revokeObjectURL(state.stickerUrl);
+  state.objectUrl = null; state.stickerUrl = '';
   els.file.value = ''; showOnly('upload');
 }
 

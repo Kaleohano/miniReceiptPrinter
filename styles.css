@@ -88,6 +88,7 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
 .secondary-button { color: var(--rose-dark); background: rgba(255,253,248,.86); }
 .primary-button:hover, .secondary-button:hover { transform: translateY(-2px); }
 .primary-button:active, .secondary-button:active { transform: translateY(1px) scale(.98); box-shadow: none; }
+.primary-button:disabled, .secondary-button:disabled { cursor: wait; opacity: .48; transform: none; box-shadow: none; }
 .button-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 24px; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
@@ -143,7 +144,9 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
 /* Preview */
 .preview-panel { width: min(950px, 100%); height: 100%; display: grid; grid-template-columns: minmax(280px, 470px) minmax(280px, 390px); align-items: center; justify-content: center; gap: clamp(52px, 8vw, 108px); padding: 24px 0; }
 .preview-photo-wrap { position: relative; padding: 13px 13px 48px; border: 1.5px solid var(--rose); background: var(--paper); box-shadow: 7px 9px 0 rgba(132,51,72,.09); transform: rotate(-1.4deg); }
-.preview-photo-wrap img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; filter: saturate(.88) contrast(1.03); }
+.preview-photo-wrap img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: contain; filter: saturate(.92) contrast(1.02); }
+.preview-panel.is-processing .preview-photo-wrap img { opacity: .44; filter: saturate(.7) blur(1px); }
+.subject-status { position: absolute; z-index: 3; left: 50%; top: 50%; width: max-content; max-width: 80%; margin: 0; padding: 8px 13px; color: var(--rose-dark); background: rgba(255,253,248,.92); border: 1px solid var(--line); border-radius: var(--control-radius); transform: translate(-50%,-50%); font-size: 11px; text-align: center; }
 .preview-tape { position: absolute; top: -13px; left: 38%; width: 90px; height: 27px; background: rgba(246,216,222,.86); transform: rotate(2deg); }
 .preview-copy h2 { max-width: 10ch; margin: 0; color: var(--rose-dark); font-family: "Iowan Old Style", Baskerville, Georgia, serif; font-size: clamp(36px, 4.2vw, 58px); font-weight: 600; line-height: 1.06; letter-spacing: -.045em; }
 .preview-copy > p:not(.eyebrow) { max-width: 34ch; margin: 18px 0 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
@@ -158,8 +161,8 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
 .receipt-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding-bottom: 7px; border-bottom: 1px dashed var(--rose); }
 .receipt-head span { font: 700 11px/1.2 "Courier New", monospace; }
 .receipt-head small { font: 700 7px/1.2 "Courier New", monospace; }
-.receipt-photo { width: 66%; margin: 8px auto 7px; padding: 4px; border: 1px solid var(--rose); background: var(--paper-pink); transform: rotate(-.7deg); }
-.receipt-photo img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; filter: saturate(.86) contrast(1.03); }
+.receipt-photo { width: 66%; margin: 8px auto 7px; padding: 2px; transform: rotate(-.7deg); }
+.receipt-photo img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: contain; filter: saturate(.9) contrast(1.02); }
 .receipt-info { margin: 0; padding: 5px 0; border-top: 1px dashed var(--rose-soft); border-bottom: 1px dashed var(--rose-soft); }
 .receipt-info div { display: grid; grid-template-columns: 36px 1fr; gap: 6px; margin: 2px 0; font-size: 8px; line-height: 1.35; }
 .receipt-info dt { color: var(--rose); }
