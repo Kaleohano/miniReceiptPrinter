@@ -11,10 +11,11 @@
   --rose-shade: #a6333b;
   --metal: #7f7779;
   --lens: #435661;
-  --machine-body: #72503d;
-  --machine-body-dark: #4c3429;
-  --machine-cream: #e9dfc5;
-  --machine-black: #302822;
+  --machine-body: #3b2821;
+  --machine-body-dark: #211713;
+  --machine-cream: #e4dcc6;
+  --machine-black: #171311;
+  --machine-metal: #aaa49a;
   --blue: #d7ebf1;
   --ink: #403d3e;
   --muted: #6f7474;
@@ -94,29 +95,30 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
 
 /* Brown and cream stationery typewriter */
 .typewriter-model { position: relative; isolation: isolate; width: min(520px, 86vw); height: 480px; margin-inline: auto; }
-.typewriter-model::after { content: ""; position: absolute; z-index: -1; left: 12%; right: 8%; bottom: 2%; height: 7%; border-radius: 50%; background: rgba(75,43,43,.16); filter: blur(10px); }
-.model-paper { position: absolute; z-index: 2; top: 0; left: 28%; width: 44%; height: 43%; padding: 28px 29px; overflow: hidden; border: 1px solid #b9ac92; border-radius: 1px; color: #25211f; background: linear-gradient(94deg,#f0ead9 0 67%,#e2dac6 100%); box-shadow: inset 8px 0 14px rgba(86,71,52,.035), 3px 5px 0 rgba(81,54,45,.08); clip-path: polygon(0 2%,5% 0,10% 1.4%,16% .2%,23% 1.1%,31% 0,40% 1%,48% .1%,56% 1.3%,65% 0,73% .8%,82% 0,90% 1.2%,100% 0,100% 100%,0 100%); font: 700 11px/1.45 "Courier New", monospace; transform-origin: center bottom; }
+.typewriter-model::after { content: ""; position: absolute; z-index: -1; left: 8%; right: 8%; bottom: 1%; height: 8%; border-radius: 50%; background: rgba(48,29,23,.2); filter: blur(12px); }
+.model-paper { position: absolute; z-index: 2; top: 0; left: 21%; width: 58%; height: 46%; padding: 28px 36px; overflow: hidden; border: 1px solid #b9ac92; border-radius: 1px; color: #25211f; background: linear-gradient(94deg,#f0ead9 0 67%,#e2dac6 100%); box-shadow: inset 8px 0 14px rgba(86,71,52,.035), 3px 5px 0 rgba(81,54,45,.08); font: 700 11px/1.45 "Courier New", monospace; transform-origin: center bottom; }
 .model-paper i { display: block; width: 72%; height: 1.5px; margin-top: 13px; background: var(--rose-soft); transform-origin: left; }
 .model-paper i:nth-of-type(2) { width: 48%; }
 .model-paper i:nth-of-type(3) { width: 63%; }
 .model-paper i:nth-of-type(4) { width: 38%; }
-.paper-guide { position: absolute; z-index: 6; top: 39%; width: 10px; height: 26px; border: 1px solid #625d50; border-radius: 2px; background: var(--machine-cream); }
-.guide-left { left: 26%; } .guide-right { right: 26%; }
+.paper-guide { position: absolute; z-index: 6; top: 39%; width: 10px; height: 26px; border: 1px solid #5a5148; border-radius: 2px; background: linear-gradient(90deg,#c7c0b4,var(--machine-metal),#e6e0d5); }
+.guide-left { left: 19%; } .guide-right { right: 19%; }
 .model-carriage { --carriage-x: 0%; position: absolute; z-index: 3; top: 41%; left: -2%; width: 104%; height: 44px; display: grid; grid-template-columns: 42px 1fr 42px; align-items: center; transform: translateX(var(--carriage-x)); transition: transform 90ms linear; }
 .model-carriage.is-returning { transition-duration: 165ms; transition-timing-function: cubic-bezier(.2,.8,.2,1); }
-.carriage-rail { position: relative; height: 21px; border: 1.5px solid #171514; border-radius: 1px; background: repeating-linear-gradient(90deg,#f3ead0 0 2px,#272321 2px 5px); box-shadow: inset 0 6px var(--machine-black), inset 0 -3px #82755e; }
-.carriage-knob { height: 31px; border: 1.5px solid #171514; border-radius: 6px; background: var(--machine-black); }
-.return-lever { position: absolute; z-index: 6; top: 34%; left: -10%; width: 31%; height: 8px; border: 2px solid #171514; border-radius: 2px; background: var(--machine-black); transform: rotate(-35deg); transform-origin: right center; }
-.return-lever::before { content: ""; position: absolute; left: -4px; top: -7px; width: 32px; height: 19px; border: 2px solid #171514; border-radius: 1px; background: var(--machine-black); transform: rotate(3deg); }
-.ribbon-deck { position: absolute; z-index: 4; top: 45%; left: 7%; width: 86%; height: 76px; display: flex; align-items: flex-start; justify-content: space-between; padding: 8px 11px 0; border: 2px solid #f4ead1; border-bottom: 0; border-radius: 18px 18px 0 0; background: var(--machine-body); }
-.ribbon-deck::before { content: ""; position: absolute; z-index: 0; left: 27%; top: 8%; width: 46%; height: 72px; border: 3px solid var(--machine-black); border-bottom: 0; border-radius: 50% 50% 0 0; background: repeating-conic-gradient(from 224deg at 50% 100%,var(--machine-black) 0 3deg,transparent 3deg 7deg); clip-path: polygon(0 0,100% 0,84% 100%,16% 100%); }
-.ribbon-spool { position: relative; z-index: 2; display: block; width: 38px; height: 38px; border: 2px solid #171514; border-radius: 50%; background: var(--machine-black); }
+.carriage-rail { position: relative; height: 18px; border: 1.5px solid #302b27; border-radius: 3px; background: repeating-linear-gradient(90deg,transparent 0 8px,rgba(35,29,25,.65) 8px 9px),linear-gradient(#d6d1c8,#858077 52%,#c7c1b8); box-shadow: inset 0 -3px #56514c,0 2px 0 rgba(20,15,12,.35); }
+.carriage-knob { height: 34px; border: 2px solid #120f0d; border-radius: 7px; background: linear-gradient(90deg,#171311,#3a302b 50%,#15110f); }
+.return-lever { position: absolute; z-index: 6; top: 34%; left: -9%; width: 29%; height: 7px; border: 1px solid #4f4a44; border-radius: 3px; background: linear-gradient(#d1ccc4,#77716a); transform: rotate(-35deg); transform-origin: right center; }
+.return-lever::before { content: ""; position: absolute; left: -4px; top: -7px; width: 31px; height: 18px; border: 2px solid #171311; border-radius: 3px; background: linear-gradient(90deg,#2a211d,#574943); transform: rotate(3deg); }
+.ribbon-deck { position: absolute; z-index: 4; top: 44%; left: 7%; width: 86%; height: 116px; display: flex; align-items: flex-start; justify-content: space-between; padding: 16px 18px 0; border: 2px solid var(--machine-body-dark); border-radius: 9px 9px 18px 18px; background: linear-gradient(174deg,#503a31 0 18%,#392720 19% 70%,#281c18 100%); box-shadow: inset 0 2px rgba(255,255,255,.12),inset 0 -8px rgba(16,11,9,.25); }
+.ribbon-deck::before { content: ""; position: absolute; z-index: 1; left: 27%; top: 28%; width: 46%; height: 61px; border: 3px solid #181210; border-bottom: 0; border-radius: 50% 50% 8px 8px; background: repeating-conic-gradient(from 224deg at 50% 100%,#15110f 0 3deg,transparent 3deg 7deg); clip-path: polygon(0 0,100% 0,84% 100%,16% 100%); }
+.ribbon-deck::after { content: ""; position: absolute; z-index: 3; left: 4%; right: 4%; bottom: 10px; height: 3px; border-radius: 2px; background: linear-gradient(90deg,#71675f,#d0cac1 18%,#777068 82%,#c8c2b8); opacity: .7; }
+.ribbon-spool { position: relative; z-index: 2; display: block; width: 44px; height: 44px; border: 2px solid #100d0c; border-radius: 50%; background: radial-gradient(circle at 36% 32%,#564b45,#171311 65%); }
 .ribbon-spool i { position: absolute; inset: 38%; border: 1px solid #e8dcc0; border-radius: 50%; background: var(--machine-cream); }
-.type-guide { position: relative; z-index: 3; display: block; align-self: flex-start; width: 66px; height: 37px; margin-top: -5px; border: 3px solid var(--machine-black); border-bottom: 0; border-radius: 50% 50% 0 0; background: var(--machine-body); }
-.model-shell { position: absolute; z-index: 4; left: 6%; right: 6%; bottom: 4%; height: 48%; padding: 58px 34px 16px; overflow: visible; border: 2px solid var(--machine-body-dark); border-radius: 2px 2px 10px 10px; background: linear-gradient(155deg, #86644e 0 18%, var(--machine-body) 47%, #684634 100%); box-shadow: inset 0 -11px rgba(62,36,27,.13), 4px 8px 0 rgba(68,45,36,.1); clip-path: polygon(9% 0,91% 0,100% 100%,0 100%); }
-.model-shell::after { content: ""; position: absolute; pointer-events: none; inset: 7px 8px 9px; border: 3px solid #fff7df; border-top: 0; border-radius: 0 0 25px 25px; clip-path: polygon(0 10%,12% 10%,12% 0,88% 0,88% 10%,100% 10%,100% 100%,0 100%); }
-.shell-highlight { position: absolute; left: 8%; right: 8%; top: 1px; height: 2px; background: rgba(255,255,255,.72); }
-.keywell { position: absolute; left: 10%; right: 10%; top: 30%; bottom: 12%; border-radius: 4px; background: rgba(44,31,25,.25); }
+.type-guide { position: relative; z-index: 4; display: block; align-self: flex-start; width: 52px; height: 48px; margin-top: 9px; border: 3px solid #171311; border-bottom: 0; border-radius: 50% 50% 0 0; background: #2c201b; }
+.model-shell { position: absolute; z-index: 4; left: 5%; right: 5%; bottom: 3%; height: 49%; padding: 49px 32px 18px; overflow: visible; border: 3px solid var(--machine-body-dark); border-radius: 6px 6px 14px 14px; background: linear-gradient(160deg,#49342b 0 12%,var(--machine-body) 36%,#2c1e19 100%); box-shadow: inset 0 2px rgba(255,255,255,.1),inset 0 -12px rgba(17,11,9,.2),4px 8px 0 rgba(57,36,29,.12); clip-path: polygon(5% 0,95% 0,100% 100%,0 100%); }
+.model-shell::after { content: ""; position: absolute; pointer-events: none; inset: 11px 14px 12px; border: 2px solid rgba(218,207,185,.48); border-top: 0; border-radius: 0 0 17px 17px; clip-path: polygon(0 13%,9% 13%,9% 0,91% 0,91% 13%,100% 13%,100% 100%,0 100%); }
+.shell-highlight { position: absolute; left: 7%; right: 7%; top: 3px; height: 2px; background: linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent); }
+.keywell { position: absolute; left: 9%; right: 9%; top: 22%; bottom: 12%; border: 2px solid #15100e; border-radius: 5px; background: linear-gradient(#171311,#261b17); box-shadow: inset 0 5px 10px rgba(0,0,0,.35); }
 .model-brand { position: absolute; z-index: 7; bottom: 8%; left: 50%; padding: 0; border: 0; color: #f8e9c8; background: transparent; transform: translateX(-50%); font: 700 7px/1 "Courier New", monospace; letter-spacing: .5em; white-space: nowrap; }
 .model-brand small { display: block; margin-top: 2px; font-size: 4px; letter-spacing: .09em; }
 .model-keyboard { position: relative; z-index: 6; display: flex; flex-direction: column; align-items: center; gap: 5px; }
@@ -124,11 +126,11 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
 .model-key-row.row-2 { transform: translateX(5px); }
 .model-key-row.row-3 { transform: translateX(10px); }
 .model-key-row.row-4 { transform: translateX(15px); }
-.model-key { position: relative; z-index: 2; display: grid; place-items: center; width: 26px; height: 24px; border: 2px solid var(--machine-black); border-radius: 50%; color: #272321; background: var(--machine-cream); box-shadow: inset 0 1px #fff6d9, 0 3px 0 #4d3f32; font: 700 8px/1 "Courier New", monospace; transition: transform 55ms ease, box-shadow 55ms ease; }
+.model-key { position: relative; z-index: 2; display: grid; place-items: center; width: 27px; height: 23px; border: 1.5px solid #6c6559; border-radius: 5px 5px 4px 4px; color: #29241f; background: linear-gradient(#f0ead8,#d0c7ae); box-shadow: inset 0 2px #fffaf0,0 3px 0 #5b5147,0 4px 2px rgba(0,0,0,.35); font: 700 8px/1 "Courier New", monospace; transition: transform 55ms ease, box-shadow 55ms ease; }
 .model-key::after { content: ""; position: absolute; z-index: -1; top: 20px; left: 50%; width: 2px; height: 12px; background: var(--machine-black); transform: translateX(-50%) rotate(var(--stem-angle,0deg)); transform-origin: top; }
 .model-key-row.row-1 .model-key:nth-child(odd), .model-key-row.row-3 .model-key:nth-child(even) { --stem-angle: -2deg; }
-.model-key.pressed { background: #c9b98e; transform: translateY(6px) rotate(.7deg); box-shadow: inset 0 1px #e8dcb8,0 1px 0 #4d3f32; }
-.model-spacebar { position: absolute; z-index: 7; left: 31%; bottom: 13%; width: 38%; height: 14px; border: 2px solid #171514; border-radius: 3px; background: var(--machine-black); }
+.model-key.pressed { background: #bfb49a; transform: translateY(6px) rotate(.4deg); box-shadow: inset 0 1px #e8dfca,0 1px 0 #4d443c; }
+.model-spacebar { position: absolute; z-index: 7; left: 27%; bottom: 10%; width: 46%; height: 15px; border: 2px solid #514b43; border-radius: 50% 50% 3px 3px; background: linear-gradient(#e9e2cf,#aaa393); box-shadow: 0 3px 0 #171311; }
 .machine-foot { position: absolute; z-index: 3; bottom: -6px; width: 17%; height: 9px; border-radius: 2px; background: var(--machine-black); }
 .foot-left { left: 11%; } .foot-right { right: 11%; }
 .typewriter-model.is-typing .ribbon-spool:first-child { animation: spoolTurn .58s steps(4) infinite; }
@@ -156,6 +158,8 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
 .printing-scene { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 0 0 8px; overflow: hidden; }
 .printing-scene .typewriter-model { flex: 0 0 auto; transform: translateY(14px); }
 .printing-scene .receipt-in-typewriter { --ticket-paper: #f3eddd; --ticket-ink: #28231e; top: -25%; left: 29%; width: 42%; height: 88%; padding: 15px 15px 24px; border-color: color-mix(in srgb, var(--ticket-ink) 45%, transparent); color: var(--ticket-ink); background: var(--ticket-paper); box-shadow: inset 8px 0 14px rgba(40,35,30,.04), 3px 5px 0 rgba(45,35,27,.08); }
+.printing-scene .guide-left { left: 27%; }
+.printing-scene .guide-right { right: 27%; }
 .typed-receipt { width: 100%; color: var(--ticket-ink); opacity: 0; clip-path: inset(0 0 100% 0); }
 .typed-receipt.is-printing { opacity: 1; animation: typeReceiptContent 1.65s steps(14,end) forwards; }
 .typed-receipt.is-printed { opacity: 1; clip-path: inset(0); }
@@ -201,7 +205,7 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
   .model-key::after { top: 19px; height: 9px; }
   .model-carriage { height: 36px; grid-template-columns: 36px 1fr 36px; }
   .carriage-knob { height: 34px; }
-  .ribbon-deck { height: 42px; }
+  .ribbon-deck { height: 82px; padding-top: 10px; }
   .ribbon-spool { width: 33px; height: 33px; }
   .support-text { bottom: 30px; }
   .intro-copy { bottom: 58px; }
@@ -273,7 +277,7 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
   .printing-scene .model-key-row { gap: 5px; }
   .printing-scene .model-key { width: 19px; height: 19px; font-size: 6px; }
   .printing-scene .model-key::after { top: 17px; height: 8px; }
-  .printing-scene .ribbon-deck { height: 40px; }
+  .printing-scene .ribbon-deck { height: 78px; padding-top: 9px; }
   .printing-scene .ribbon-spool { width: 30px; height: 30px; }
   .printing-scene .model-carriage { height: 34px; grid-template-columns: 32px 1fr 32px; }
   .printing-scene .carriage-knob { height: 32px; }
