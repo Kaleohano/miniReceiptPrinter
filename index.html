@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#c9edf0" />
+    <meta name="theme-color" content="#efe6d1" />
     <meta name="description" content="把一张照片打印成一份属于今天的电子小票。" />
     <title>Today's Receipt</title>
-    <link rel="stylesheet" href="styles.css?v=20260814-1" />
+    <link rel="stylesheet" href="styles.css?v=20260817-1" />
   </head>
   <body>
     <div class="grain" aria-hidden="true"></div>
@@ -67,18 +67,22 @@
             <div class="model-paper receipt-in-typewriter" id="printingPaper">
               <div class="typed-receipt" id="typedReceipt">
                 <div class="receipt-head">
-                  <span>TODAY'S RECEIPT</span>
-                  <small id="receiptNumber">NO. 000000</small>
+                  <span>TODAY'S<br />RECEIPT</span>
+                  <div><small>MEMORY ARCHIVE</small><small id="receiptNumber">NO. 000000</small></div>
                 </div>
+                <dl class="receipt-meta">
+                  <div><dt>DATE</dt><dd id="receiptDate"></dd></div>
+                  <div><dt>TIME</dt><dd id="receiptTime"></dd></div>
+                </dl>
                 <div class="receipt-photo"><img id="receiptPhoto" alt="电子小票照片贴纸" /></div>
+                <p class="print-caption">[ LO-FI DITHERED PRINT ]</p>
                 <dl class="receipt-info">
-                  <div><dt>日期</dt><dd id="receiptDate"></dd></div>
-                  <div><dt>时间</dt><dd id="receiptTime"></dd></div>
-                  <div><dt>地点</dt><dd id="receiptPlace"></dd></div>
-                  <div><dt>天气</dt><dd id="receiptWeather"></dd></div>
+                  <div><dt>PLACE</dt><dd id="receiptPlace"></dd></div>
+                  <div><dt>WEATHER</dt><dd id="receiptWeather"></dd></div>
                 </dl>
                 <blockquote id="receiptQuote"></blockquote>
-                <div class="receipt-footer"><span>THANK YOU FOR TODAY</span><span>///// // ////</span></div>
+                <div class="receipt-barcode" aria-hidden="true"></div>
+                <div class="receipt-footer"><span>THANK YOU</span><span>HAVE A NICE DAY</span></div>
               </div>
             </div>
             <span class="paper-guide guide-left"></span><span class="paper-guide guide-right"></span>
@@ -114,6 +118,6 @@
       </section>
     </main>
     <div class="toast" id="toast" role="status" hidden></div>
-    <script src="app.js?v=20260814-1"></script>
+    <script src="app.js?v=20260817-1"></script>
   </body>
 </html>

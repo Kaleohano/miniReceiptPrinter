@@ -1,4 +1,4 @@
-import { removeBackground } from '@imgly/background-removal';
+import { preload, removeBackground } from '@imgly/background-removal';
 
 const $ = (selector) => document.querySelector(selector);
 
@@ -21,11 +21,29 @@ const quotes = [
   '愿你喜欢今天，也期待明天。'
 ];
 
+const receiptTones = [
+  { name: '复古白', paper: '#f3eddd', ink: '#28231e' },
+  { name: '雾蓝', paper: '#a9c8cf', ink: '#263236' },
+  { name: '旧黄', paper: '#e1c86e', ink: '#362e1c' },
+  { name: '薄荷绿', paper: '#95c997', ink: '#213326' },
+  { name: '砖红', paper: '#c46d66', ink: '#281819' },
+  { name: '灰紫', paper: '#afa0c3', ink: '#2c2534' }
+];
+
+const removalConfig = {
+  model: 'small', device: 'gpu', rescale: false, proxyToWorker: false,
+  output: { format: 'image/png', quality: .9 }
+};
+
 const state = {
   isMobile: false, imageUrl: '', stickerUrl: '', exportBlob: null, processingId: 0, sound: true,
   quoteIndex: Math.floor(Math.random() * quotes.length), location: '此刻所在的地方', weather: '天气未记录',
-  date: new Date(), objectUrl: null
+  date: new Date(), objectUrl: null, receiptTone: receiptTones[Math.floor(Math.random() * receiptTones.length)]
 };
+
+const warmModel = () => preload(removalConfig).catch(() => {});
+if ('requestIdleCallback' in window) requestIdleCallback(warmModel, { timeout: 1800 });
+else setTimeout(warmModel, 700);
 
 const keyRows = ['1234567890', 'QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
 document.querySelectorAll('.model-keyboard').forEach(keyboard => {
@@ -86,20 +104,22 @@ async function handleFile(file) {
   if (state.stickerUrl) URL.revokeObjectURL(state.stickerUrl);
   state.objectUrl = URL.createObjectURL(file);
   state.stickerUrl = '';
+  state.receiptTone = receiptTones[Math.floor(Math.random() * receiptTones.length)];
+  applyReceiptTone();
   const processingId = ++state.processingId;
   const image = new Image();
   image.onload = async () => {
     const dimensions = `${image.naturalWidth} × ${image.naturalHeight}`;
     setPhoto(state.objectUrl, dimensions, true);
     try {
-      const cutoutBlob = await removeBackground(file, {
-        model: 'small',
-        device: 'cpu',
-        output: { format: 'image/png', quality: 1 },
+      els.subjectStatus.textContent = '正在压缩照片，准备快速抠图';
+      const optimizedInput = await resizeForSegmentation(image);
+      const cutoutBlob = await removeBackground(optimizedInput, {
+        ...removalConfig,
         progress: (key, current, total) => {
           if (processingId !== state.processingId || !total) return;
           const progress = Math.min(99, Math.round(current / total * 100));
-          els.subjectStatus.textContent = `正在准备抠图模型 ${progress}%`;
+          els.subjectStatus.textContent = key.startsWith('compute:') ? '正在提取照片主体' : `正在准备抠图模型 ${progress}%`;
         }
       });
       if (processingId !== state.processingId) return;
@@ -116,6 +136,26 @@ async function handleFile(file) {
   };
   image.onerror = () => toast('暂时无法读取这张照片，请换一张试试');
   image.src = state.objectUrl;
+}
+
+function resizeForSegmentation(image) {
+  const size = state.isMobile ? 896 : 1024;
+  const scale = Math.min(size / image.naturalWidth, size / image.naturalHeight);
+  const canvas = document.createElement('canvas');
+  canvas.width = size; canvas.height = size;
+  const context = canvas.getContext('2d', { alpha: false });
+  context.imageSmoothingEnabled = true;
+  context.imageSmoothingQuality = 'high';
+  context.fillStyle = '#f2f0e9'; context.fillRect(0, 0, size, size);
+  const width = Math.round(image.naturalWidth * scale), height = Math.round(image.naturalHeight * scale);
+  context.drawImage(image, Math.round((size - width) / 2), Math.round((size - height) / 2), width, height);
+  return new Promise((resolve, reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Photo resize failed')), 'image/jpeg', .84));
+}
+
+function applyReceiptTone() {
+  const { paper, ink } = state.receiptTone;
+  $('#printingPaper').style.setProperty('--ticket-paper', paper);
+  $('#printingPaper').style.setProperty('--ticket-ink', ink);
 }
 
 function setPhoto(url, dimensions, processing = false) {
@@ -163,7 +203,7 @@ async function createStickerBlob(cutoutBlob) {
   if (minX > maxX || minY > maxY) throw new Error('No foreground detected');
   const cropWidth = maxX - minX + 1, cropHeight = maxY - minY + 1;
   const scale = Math.min(1, 960 / Math.max(cropWidth, cropHeight));
-  const outline = Math.max(10, Math.round(Math.max(cropWidth, cropHeight) * scale * .025));
+  const outline = Math.min(44, Math.max(16, Math.round(Math.max(cropWidth, cropHeight) * scale * .045)));
   const padding = outline * 2;
   const canvas = document.createElement('canvas');
   canvas.width = Math.ceil(cropWidth * scale + padding * 2);
@@ -186,7 +226,25 @@ async function createStickerBlob(cutoutBlob) {
     }
   }
   context.restore();
-  context.drawImage(source, drawX, drawY, source.naturalWidth * scale, source.naturalHeight * scale);
+  const foreground = document.createElement('canvas');
+  foreground.width = canvas.width; foreground.height = canvas.height;
+  const foregroundContext = foreground.getContext('2d', { willReadFrequently: true });
+  foregroundContext.filter = 'grayscale(1) contrast(1.18)';
+  foregroundContext.drawImage(source, drawX, drawY, source.naturalWidth * scale, source.naturalHeight * scale);
+  const styled = foregroundContext.getImageData(0, 0, foreground.width, foreground.height);
+  const matrix = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+  for (let y = 0; y < foreground.height; y += 1) {
+    for (let x = 0; x < foreground.width; x += 1) {
+      const index = (y * foreground.width + x) * 4;
+      if (styled.data[index + 3] < 8) continue;
+      const gray = styled.data[index];
+      const threshold = (matrix[(y % 4) * 4 + (x % 4)] - 7.5) * 3.4;
+      const tone = Math.max(0, Math.min(255, Math.round((gray + threshold) / 64) * 64));
+      styled.data[index] = tone; styled.data[index + 1] = tone; styled.data[index + 2] = tone;
+    }
+  }
+  foregroundContext.putImageData(styled, 0, 0);
+  context.drawImage(foreground, 0, 0);
   return new Promise((resolve, reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Sticker export failed')), 'image/png'));
 }
 
@@ -304,70 +362,54 @@ function drawContain(ctx, image, x, y, width, height) {
 }
 
 async function renderReceiptBlob() {
-  const canvas = els.export, ctx = canvas.getContext('2d'); canvas.width = 1200; canvas.height = 1400;
-  const rose = '#c3474d', pale = '#fff8f5', paper = '#fffdf8', blue = '#cfecef';
+  const canvas = els.export, ctx = canvas.getContext('2d'); canvas.width = 760; canvas.height = 1420;
+  const { paper, ink, name } = state.receiptTone;
   const image = new Image(); image.crossOrigin = 'anonymous';
-  const pattern = new Image(); pattern.crossOrigin = 'anonymous';
-  await Promise.all([
-    new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; image.src = state.imageUrl; }),
-    new Promise((resolve, reject) => { pattern.onload = resolve; pattern.onerror = reject; pattern.src = 'assets/checker-grid.jpg'; })
-  ]);
-  const rounded = (x, y, width, height, radius) => {
-    const r = Math.min(radius, width / 2, height / 2);
-    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + width - r, y); ctx.quadraticCurveTo(x + width, y, x + width, y + r);
-    ctx.lineTo(x + width, y + height - r); ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
-    ctx.lineTo(x + r, y + height); ctx.quadraticCurveTo(x, y + height, x, y + height - r); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
-  };
-  const line = (x1, y1, x2, y2, width = 3, color = rose) => { ctx.lineWidth = width; ctx.strokeStyle = color; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); };
+  await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; image.src = state.imageUrl; });
+  const line = (x1, y1, x2, y2, width = 2) => { ctx.lineWidth = width; ctx.strokeStyle = ink; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); };
   const fitText = (text, x, y, maxWidth, lineHeight, maxLines = 2) => {
     const chars = [...text]; let row = '', rows = [];
     chars.forEach(char => { const test = row + char; if (ctx.measureText(test).width > maxWidth && row) { rows.push(row); row = char; } else row = test; });
     if (row) rows.push(row); rows.slice(0, maxLines).forEach((value, index) => ctx.fillText(value, x, y + index * lineHeight));
   };
-  ctx.fillStyle = blue; ctx.fillRect(0, 0, canvas.width, canvas.height);
-  const tileWidth = 245, tileHeight = tileWidth * pattern.height / pattern.width;
-  for (let y = 0; y < canvas.height; y += tileHeight) for (let x = 0; x < canvas.width; x += tileWidth) ctx.drawImage(pattern, x, y, tileWidth, tileHeight);
-  ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+  const drawRightFit = (text, x, y, maxWidth, initialSize = 25) => {
+    let size = initialSize;
+    do { ctx.font = `600 ${size}px "Avenir Next", sans-serif`; size -= 1; } while (ctx.measureText(text).width > maxWidth && size > 16);
+    ctx.fillText(text, x, y);
+  };
 
-  ctx.save(); ctx.shadowColor = 'rgba(127,41,50,.14)'; ctx.shadowOffsetX = 10; ctx.shadowOffsetY = 12;
-  ctx.fillStyle = paper; rounded(300, 55, 600, 800, 8); ctx.fill(); ctx.restore();
-  ctx.strokeStyle = rose; ctx.lineWidth = 3; rounded(300, 55, 600, 800, 8); ctx.stroke();
-  ctx.fillStyle = '#7f2932'; ctx.textBaseline = 'top'; ctx.font = 'bold 28px monospace'; ctx.fillText("TODAY'S RECEIPT", 340, 92);
-  ctx.textAlign = 'right'; ctx.font = '16px monospace'; ctx.fillText($('#receiptNumber').textContent, 860, 100); ctx.textAlign = 'left';
-  ctx.setLineDash([10, 8]); line(340, 143, 860, 143, 2); ctx.setLineDash([]);
-  ctx.save(); ctx.translate(600, 320); ctx.rotate(-.018); drawContain(ctx, image, -202, -129, 404, 258); ctx.restore();
-  const rows = [['日期', $('#receiptDate').textContent], ['时间', $('#receiptTime').textContent], ['地点', state.location], ['天气', state.weather]];
-  ctx.setLineDash([8, 7]); line(340, 480, 860, 480, 2); ctx.setLineDash([]);
-  rows.forEach((row, i) => { const y = 510 + i * 43; ctx.fillStyle = '#c3474d'; ctx.font = '18px sans-serif'; ctx.fillText(row[0], 350, y); ctx.fillStyle = '#7f2932'; ctx.textAlign = 'right'; ctx.fillText(row[1], 850, y); ctx.textAlign = 'left'; });
-  ctx.setLineDash([8, 7]); line(340, 695, 860, 695, 2); ctx.setLineDash([]);
-  ctx.fillStyle = '#7f2932'; ctx.textAlign = 'center'; ctx.font = '20px sans-serif'; fitText(`“${quotes[state.quoteIndex]}”`, 600, 720, 470, 30, 2);
-  ctx.font = 'bold 14px monospace'; ctx.fillText('THANK YOU FOR TODAY', 600, 792); ctx.textAlign = 'left';
+  ctx.fillStyle = paper; ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = ink; ctx.globalAlpha = .025;
+  for (let y = 10; y < canvas.height; y += 15) ctx.fillRect(0, y, canvas.width, 1);
+  ctx.globalAlpha = 1; ctx.textBaseline = 'top'; ctx.textAlign = 'center';
+  ctx.font = '900 64px "Courier New", monospace'; ctx.fillText("TODAY'S RECEIPT", 380, 74);
+  ctx.font = '700 15px "Courier New", monospace'; ctx.letterSpacing = '6px'; ctx.fillText('MEMORY ARCHIVE', 380, 141); ctx.letterSpacing = '0px';
+  ctx.textAlign = 'left'; ctx.font = '700 19px "Courier New", monospace'; ctx.fillText('DATE', 68, 202); ctx.fillText('TIME', 68, 236);
+  ctx.textAlign = 'right'; drawRightFit($('#receiptDate').textContent, 692, 202, 390, 21); drawRightFit($('#receiptTime').textContent, 692, 236, 390, 21);
+  ctx.setLineDash([8, 7]); line(66, 282, 694, 282); ctx.setLineDash([]);
 
-  ctx.save(); ctx.shadowColor = 'rgba(77,39,34,.18)'; ctx.shadowBlur = 18; ctx.shadowOffsetY = 12;
-  ctx.fillStyle = '#272321'; ctx.strokeStyle = '#171514'; ctx.lineWidth = 4; rounded(115, 790, 970, 92, 8); ctx.fill(); ctx.stroke(); ctx.restore();
-  [155, 1045].forEach(x => {
-    ctx.fillStyle = '#272321'; ctx.strokeStyle = '#171514'; ctx.lineWidth = 4; rounded(x - 35, 784, 70, 46, 8); ctx.fill(); ctx.stroke();
+  ctx.save(); ctx.filter = 'grayscale(1) contrast(1.12)'; drawContain(ctx, image, 88, 316, 584, 448); ctx.restore();
+  ctx.textAlign = 'center'; ctx.font = '700 14px "Courier New", monospace'; ctx.fillText('[ LO-FI DITHERED PRINT ]', 380, 786);
+  ctx.setLineDash([8, 7]); line(66, 832, 694, 832); ctx.setLineDash([]);
+  const rows = [['PLACE', state.location], ['WEATHER', state.weather], ['PAPER', name], ['SERIAL', $('#receiptNumber').textContent.replace('NO. ', '')]];
+  rows.forEach((row, index) => {
+    const y = 866 + index * 44;
+    ctx.fillStyle = ink; ctx.textAlign = 'left'; ctx.font = '700 19px "Courier New", monospace'; ctx.fillText(row[0], 68, y);
+    ctx.textAlign = 'right'; drawRightFit(row[1], 692, y, 430, 21);
   });
-  ctx.fillStyle = '#ded2ae'; ctx.strokeStyle = '#625d50'; ctx.lineWidth = 3; rounded(320, 774, 18, 64, 3); ctx.fill(); ctx.stroke(); rounded(862, 774, 18, 64, 3); ctx.fill(); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(164, 790); ctx.lineTo(70, 735); ctx.lineTo(52, 748); ctx.lineTo(145, 814); ctx.closePath(); ctx.fillStyle = '#272321'; ctx.fill(); ctx.strokeStyle = '#171514'; ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(205, 840); ctx.lineTo(995, 840); ctx.lineTo(1090, 1235); ctx.lineTo(110, 1235); ctx.closePath(); ctx.fillStyle = '#d72727'; ctx.fill(); ctx.strokeStyle = '#8f1719'; ctx.lineWidth = 6; ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(260, 910); ctx.lineTo(940, 910); ctx.lineTo(1000, 1196); ctx.lineTo(200, 1196); ctx.closePath(); ctx.fillStyle = 'rgba(116,15,18,.22)'; ctx.fill();
-  ctx.strokeStyle = '#fff7df'; ctx.lineWidth = 7; ctx.beginPath(); ctx.moveTo(155, 1030); ctx.lineTo(190, 1210); ctx.quadraticCurveTo(600, 1262, 1010, 1210); ctx.lineTo(1045, 1030); ctx.stroke();
-  ctx.strokeStyle = '#272321'; ctx.lineWidth = 7; ctx.beginPath(); ctx.arc(600, 878, 150, Math.PI, 0); ctx.stroke();
-  for (let i = -7; i <= 7; i += 1) { const angle = Math.PI * (i + 7) / 14; line(600, 878, 600 + Math.cos(angle) * 142, 878 - Math.sin(angle) * 88, 5, '#272321'); }
-  const labels = ['1','2','3','4','5','6','7','8','9','0','Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M'];
-  const counts = [10, 10, 9, 7]; let keyIndex = 0;
-  counts.forEach((count, rowIndex) => {
-    const keyWidth = 47, keyHeight = 39, gap = 23, rowWidth = count * keyWidth + (count - 1) * gap, startX = 600 - rowWidth / 2 + rowIndex * 6;
-    for (let i = 0; i < count; i += 1) {
-      const x = startX + i * (keyWidth + gap), y = 930 + rowIndex * 63;
-      line(x + keyWidth / 2, y + 32, x + keyWidth / 2, y + 55, 2, '#272321');
-      ctx.fillStyle = '#ded2ae'; ctx.strokeStyle = '#272321'; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(x + keyWidth / 2, y + keyHeight / 2, keyHeight / 2, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = '#272321'; ctx.textAlign = 'center'; ctx.font = 'bold 14px monospace'; ctx.fillText(labels[keyIndex++].toLowerCase(), x + keyWidth / 2, y + 10);
-    }
-  });
-  ctx.fillStyle = '#272321'; ctx.strokeStyle = '#171514'; ctx.lineWidth = 3; rounded(440, 1180, 320, 30, 4); ctx.fill(); ctx.stroke();
-  ctx.fillStyle = '#7f2932'; ctx.textAlign = 'center'; ctx.font = 'bold 24px sans-serif'; ctx.fillText("TODAY'S RECEIPT", 600, 1315);
+  ctx.setLineDash([8, 7]); line(66, 1054, 694, 1054); ctx.setLineDash([]);
+  ctx.fillStyle = ink; ctx.textAlign = 'center'; ctx.font = '700 25px "Avenir Next", sans-serif'; fitText(`“${quotes[state.quoteIndex]}”`, 380, 1090, 590, 38, 2);
+  ctx.setLineDash([8, 7]); line(66, 1188, 694, 1188); ctx.setLineDash([]);
+  const code = $('#receiptNumber').textContent.replace(/\D/g, '') || '08170000';
+  let barcodeX = 218;
+  for (let index = 0; index < 48; index += 1) {
+    const digit = Number(code[index % code.length]);
+    const width = 2 + ((digit + index) % 3) * 2;
+    ctx.fillRect(barcodeX, 1224, width, 76); barcodeX += width + 3 + (index % 2);
+  }
+  ctx.font = '700 14px "Courier New", monospace'; ctx.fillText(code, 380, 1312);
+  ctx.font = '700 18px "Courier New", monospace'; ctx.letterSpacing = '7px'; ctx.fillText('THANK YOU', 380, 1345);
+  ctx.font = '700 13px "Courier New", monospace'; ctx.letterSpacing = '4px'; ctx.fillText('HAVE A NICE DAY', 380, 1376); ctx.letterSpacing = '0px'; ctx.textAlign = 'left';
   const blob = await new Promise((resolve, reject) => canvas.toBlob(value => value ? resolve(value) : reject(new Error('Receipt export failed')), 'image/png'));
   ctx.textAlign = 'left'; return blob;
 }
