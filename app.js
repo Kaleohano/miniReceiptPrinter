@@ -38,12 +38,12 @@ const removalConfig = {
 const state = {
   isMobile: false, imageUrl: '', stickerUrl: '', exportBlob: null, processingId: 0, sound: true,
   quoteIndex: Math.floor(Math.random() * quotes.length), location: '此刻所在的地方', weather: '天气未记录',
-  date: new Date(), objectUrl: null, receiptTone: receiptTones[Math.floor(Math.random() * receiptTones.length)]
+  date: new Date(), objectUrl: null, processingPromise: null,
+  receiptTone: receiptTones[Math.floor(Math.random() * receiptTones.length)]
 };
 
 const warmModel = () => preload(removalConfig).catch(() => {});
-if ('requestIdleCallback' in window) requestIdleCallback(warmModel, { timeout: 1800 });
-else setTimeout(warmModel, 700);
+warmModel();
 
 const keyRows = ['1234567890', 'QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
 document.querySelectorAll('.model-keyboard').forEach(keyboard => {
@@ -108,10 +108,11 @@ async function handleFile(file) {
   applyReceiptTone();
   const processingId = ++state.processingId;
   const image = new Image();
-  image.onload = async () => {
+  image.onload = () => {
     const dimensions = `${image.naturalWidth} × ${image.naturalHeight}`;
     setPhoto(state.objectUrl, dimensions, true);
-    try {
+    state.processingPromise = (async () => {
+      try {
       els.subjectStatus.textContent = '正在压缩照片，准备快速抠图';
       const optimizedInput = await resizeForSegmentation(image);
       const cutoutBlob = await removeBackground(optimizedInput, {
@@ -119,7 +120,7 @@ async function handleFile(file) {
         progress: (key, current, total) => {
           if (processingId !== state.processingId || !total) return;
           const progress = Math.min(99, Math.round(current / total * 100));
-          els.subjectStatus.textContent = key.startsWith('compute:') ? '正在提取照片主体' : `正在准备抠图模型 ${progress}%`;
+          updateProcessingStatus(key.startsWith('compute:') ? '正在提取照片主体' : `正在准备抠图模型 ${progress}%`);
         }
       });
       if (processingId !== state.processingId) return;
@@ -127,15 +128,21 @@ async function handleFile(file) {
       if (processingId !== state.processingId) return;
       state.stickerUrl = URL.createObjectURL(stickerBlob);
       setPhoto(state.stickerUrl, dimensions, false);
-    } catch (error) {
-      if (processingId !== state.processingId) return;
-      console.warn('Subject extraction failed:', error);
-      finishPhotoProcessing(false);
-      toast('主体识别失败，已保留原照片');
-    }
+      } catch (error) {
+        if (processingId !== state.processingId) return;
+        console.warn('Subject extraction failed:', error);
+        finishPhotoProcessing(false);
+        toast('主体识别失败，已保留原照片');
+      }
+    })();
   };
-  image.onerror = () => toast('暂时无法读取这张照片，请换一张试试');
+  image.onerror = () => { state.processingPromise = Promise.resolve(); toast('暂时无法读取这张照片，请换一张试试'); };
   image.src = state.objectUrl;
+}
+
+function updateProcessingStatus(message) {
+  els.subjectStatus.textContent = message;
+  if (!els.printing.hidden) els.printingStatus.textContent = message;
 }
 
 function resizeForSegmentation(image) {
@@ -159,16 +166,17 @@ function applyReceiptTone() {
 }
 
 function setPhoto(url, dimensions, processing = false) {
+  const printingInProgress = !els.printing.hidden;
   state.imageUrl = url; state.exportBlob = null; state.date = new Date();
   els.previewImage.src = url; els.receiptPhoto.src = url;
   els.photoMeta.dataset.dimensions = dimensions;
-  showOnly('preview');
+  if (!printingInProgress) showOnly('preview');
   if (processing) {
     els.preview.classList.add('is-processing');
     els.subjectStatus.hidden = false;
     els.subjectStatus.textContent = '正在识别照片主体';
-    $('#makeReceiptButton').disabled = true;
-    els.photoMeta.textContent = `${dimensions}，正在本地制作贴纸。首次使用需要加载模型。`;
+    $('#makeReceiptButton').disabled = false;
+    els.photoMeta.textContent = `${dimensions}，正在本地制作贴纸，可以先开始打印。`;
   } else {
     finishPhotoProcessing(true);
   }
@@ -333,7 +341,9 @@ async function makeReceipt() {
   });
   void els.typedReceipt.offsetWidth;
   els.typedReceipt.classList.add('is-printing');
-  await new Promise(resolve => setTimeout(resolve, reduceMotion ? 80 : 1750));
+  const minimumPrint = new Promise(resolve => setTimeout(resolve, reduceMotion ? 80 : 1750));
+  const processing = state.processingPromise || Promise.resolve();
+  await Promise.all([minimumPrint, processing.catch(() => {})]);
   clearInterval(timer); clearInterval(keyTimer); activeKey?.classList.remove('pressed'); els.typewriter.classList.remove('is-typing'); els.carriage.classList.remove('is-returning');
   els.carriage.style.removeProperty('--carriage-x'); els.typedReceipt.classList.remove('is-printing'); els.typedReceipt.classList.add('is-printed');
   els.printing.classList.add('is-complete'); els.printingStatus.textContent = '正在准备保存图片';
