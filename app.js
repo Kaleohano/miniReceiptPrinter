@@ -38,7 +38,7 @@ const removalConfig = {
 const state = {
   isMobile: false, imageUrl: '', stickerUrl: '', exportBlob: null, processingId: 0, sound: true,
   quoteIndex: Math.floor(Math.random() * quotes.length), location: '此刻所在的地方', weather: '天气未记录',
-  date: new Date(), objectUrl: null, processingPromise: null,
+  date: new Date(), objectUrl: null, processingPromise: null, lockedImageUrl: '',
   receiptTone: receiptTones[Math.floor(Math.random() * receiptTones.length)]
 };
 
@@ -104,6 +104,7 @@ async function handleFile(file) {
   if (state.stickerUrl) URL.revokeObjectURL(state.stickerUrl);
   state.objectUrl = URL.createObjectURL(file);
   state.stickerUrl = '';
+  state.lockedImageUrl = '';
   state.receiptTone = receiptTones[Math.floor(Math.random() * receiptTones.length)];
   applyReceiptTone();
   const processingId = ++state.processingId;
@@ -113,21 +114,21 @@ async function handleFile(file) {
     setPhoto(state.objectUrl, dimensions, true);
     state.processingPromise = (async () => {
       try {
-      els.subjectStatus.textContent = '正在压缩照片，准备快速抠图';
-      const optimizedInput = await resizeForSegmentation(image);
-      const cutoutBlob = await removeBackground(optimizedInput, {
-        ...removalConfig,
-        progress: (key, current, total) => {
-          if (processingId !== state.processingId || !total) return;
-          const progress = Math.min(99, Math.round(current / total * 100));
-          updateProcessingStatus(key.startsWith('compute:') ? '正在提取照片主体' : `正在准备抠图模型 ${progress}%`);
-        }
-      });
-      if (processingId !== state.processingId) return;
-      const stickerBlob = await createStickerBlob(cutoutBlob);
-      if (processingId !== state.processingId) return;
-      state.stickerUrl = URL.createObjectURL(stickerBlob);
-      setPhoto(state.stickerUrl, dimensions, false);
+        els.subjectStatus.textContent = '正在压缩照片，准备快速抠图';
+        const optimizedInput = await resizeForSegmentation(image);
+        const cutoutBlob = await removeBackground(optimizedInput, {
+          ...removalConfig,
+          progress: (key, current, total) => {
+            if (processingId !== state.processingId || !total) return;
+            const progress = Math.min(99, Math.round(current / total * 100));
+            updateProcessingStatus(key.startsWith('compute:') ? '正在提取照片主体' : `正在准备抠图模型 ${progress}%`);
+          }
+        });
+        if (processingId !== state.processingId) return;
+        const stickerBlob = await createStickerBlob(cutoutBlob);
+        if (processingId !== state.processingId) return;
+        state.stickerUrl = URL.createObjectURL(stickerBlob);
+        setPhoto(state.stickerUrl, dimensions, false);
       } catch (error) {
         if (processingId !== state.processingId) return;
         console.warn('Subject extraction failed:', error);
@@ -167,8 +168,10 @@ function applyReceiptTone() {
 
 function setPhoto(url, dimensions, processing = false) {
   const printingInProgress = !els.printing.hidden;
+  const receiptLocked = printingInProgress && els.printing.classList.contains('is-complete');
   state.imageUrl = url; state.exportBlob = null; state.date = new Date();
-  els.previewImage.src = url; els.receiptPhoto.src = url;
+  els.previewImage.src = url;
+  if (!receiptLocked) els.receiptPhoto.src = url;
   els.photoMeta.dataset.dimensions = dimensions;
   if (!printingInProgress) showOnly('preview');
   if (processing) {
@@ -299,6 +302,7 @@ function weatherName(code) {
 
 async function makeReceipt() {
   showOnly('printing'); playClick(120, .12);
+  state.lockedImageUrl = '';
   els.printing.classList.remove('is-complete');
   els.printingActions.hidden = true;
   els.typedReceipt.classList.remove('is-printing', 'is-printed');
@@ -344,6 +348,8 @@ async function makeReceipt() {
   const minimumPrint = new Promise(resolve => setTimeout(resolve, reduceMotion ? 80 : 1750));
   const processing = state.processingPromise || Promise.resolve();
   await Promise.all([minimumPrint, processing.catch(() => {})]);
+  state.lockedImageUrl = state.imageUrl;
+  els.receiptPhoto.src = state.lockedImageUrl;
   clearInterval(timer); clearInterval(keyTimer); activeKey?.classList.remove('pressed'); els.typewriter.classList.remove('is-typing'); els.carriage.classList.remove('is-returning');
   els.carriage.style.removeProperty('--carriage-x'); els.typedReceipt.classList.remove('is-printing'); els.typedReceipt.classList.add('is-printed');
   els.printing.classList.add('is-complete'); els.printingStatus.textContent = '正在准备保存图片';
@@ -375,7 +381,7 @@ async function renderReceiptBlob() {
   const canvas = els.export, ctx = canvas.getContext('2d'); canvas.width = 760; canvas.height = 1420;
   const { paper, ink, name } = state.receiptTone;
   const image = new Image(); image.crossOrigin = 'anonymous';
-  await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; image.src = state.imageUrl; });
+  await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; image.src = state.lockedImageUrl || state.imageUrl; });
   const line = (x1, y1, x2, y2, width = 2) => { ctx.lineWidth = width; ctx.strokeStyle = ink; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); };
   const fitText = (text, x, y, maxWidth, lineHeight, maxLines = 2) => {
     const chars = [...text]; let row = '', rows = [];
