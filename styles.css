@@ -17,8 +17,9 @@
   --machine-black: #171311;
   --machine-metal: #aaa49a;
   --blue: #d7ebf1;
-  --ink: #403d3e;
-  --muted: #6f7474;
+  --ink: #4b3026;
+  --muted: #765f55;
+  --coffee: #4b3026;
   --line: rgba(127,41,50,.25);
   --soft-shadow: rgba(82, 112, 119, .14);
   --surface-radius: 14px;
@@ -60,18 +61,18 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
 
 .app-shell { width: min(1440px, 100%); height: 100dvh; margin: auto; padding: 0 34px; overflow: hidden; }
 .topbar { height: 72px; display: flex; align-items: center; justify-content: space-between; }
-.wordmark { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0; border: 0; color: var(--rose-dark); background: transparent; cursor: pointer; font-family: "Iowan Old Style", Baskerville, Georgia, serif; font-size: 19px; font-weight: 600; }
+.wordmark { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0; border: 0; color: var(--coffee); background: transparent; cursor: pointer; font-family: "Iowan Old Style", Baskerville, Georgia, serif; font-size: 19px; font-weight: 600; }
 .wordmark-mark { display: grid; place-items: center; width: 28px; height: 28px; border: 1.5px solid var(--rose); border-radius: 50%; background: rgba(255,253,248,.8); font: 700 13px/1 "Courier New", monospace; }
 .top-actions { display: flex; align-items: center; gap: 12px; }
 .device-label { display: none; }
-.icon-button, .round-control { display: grid; place-items: center; min-width: 44px; min-height: 44px; border: 1px solid var(--line); border-radius: 50%; color: var(--rose-dark); background: rgba(255,253,248,.75); cursor: pointer; transition: transform .2s ease, background .2s ease; }
+.icon-button, .round-control { display: grid; place-items: center; min-width: 44px; min-height: 44px; border: 1px solid var(--line); border-radius: 50%; color: var(--coffee); background: rgba(255,253,248,.75); cursor: pointer; transition: transform .2s ease, background .2s ease; }
 .icon-button:hover, .round-control:hover { background: var(--paper); transform: translateY(-2px); }
 .icon-button:active, .round-control:active { transform: translateY(1px) scale(.97); }
 
 .stage { position: relative; height: calc(100dvh - 72px); min-height: 0; display: grid; place-items: center; overflow: hidden; }
 .intro-copy { position: absolute; z-index: 7; left: 50%; bottom: 92px; width: max-content; max-width: calc(100vw - 40px); transform: translateX(-50%); text-align: center; pointer-events: none; }
-.intro-copy p { margin: 0; color: var(--rose-dark); font-size: 13px; letter-spacing: .03em; }
-.eyebrow { margin: 0 0 12px; color: var(--rose); font: 700 11px/1.2 "Courier New", monospace; letter-spacing: .12em; }
+.intro-copy p { margin: 0; color: var(--coffee); font-size: 13px; letter-spacing: .03em; }
+.eyebrow { margin: 0 0 12px; color: var(--coffee); font: 700 11px/1.2 "Courier New", monospace; letter-spacing: .12em; }
 
 .device-scene { position: relative; width: 100%; height: 100%; min-height: 0; display: flex; align-items: center; justify-content: center; }
 
@@ -86,7 +87,7 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
   transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
 }
 .primary-button { color: #fffaf8; border-color: var(--rose-dark); background: var(--rose-dark); box-shadow: 0 7px 18px rgba(132,51,72,.16); }
-.secondary-button { color: var(--rose-dark); background: rgba(255,253,248,.86); }
+.secondary-button { color: var(--coffee); background: rgba(255,253,248,.86); }
 .primary-button:hover, .secondary-button:hover { transform: translateY(-2px); }
 .primary-button:active, .secondary-button:active { transform: translateY(1px) scale(.98); box-shadow: none; }
 .primary-button:disabled, .secondary-button:disabled { cursor: wait; opacity: .48; transform: none; box-shadow: none; }
@@ -148,9 +149,9 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
 .preview-photo-wrap { position: relative; padding: 13px 13px 48px; border: 1.5px solid var(--rose); background: var(--paper); box-shadow: 7px 9px 0 rgba(132,51,72,.09); transform: rotate(-1.4deg); }
 .preview-photo-wrap img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: contain; filter: saturate(.92) contrast(1.02); }
 .preview-panel.is-processing .preview-photo-wrap img { opacity: .44; filter: saturate(.7) blur(1px); }
-.subject-status { position: absolute; z-index: 3; left: 50%; top: 50%; width: max-content; max-width: 80%; margin: 0; padding: 8px 13px; color: var(--rose-dark); background: rgba(255,253,248,.92); border: 1px solid var(--line); border-radius: var(--control-radius); transform: translate(-50%,-50%); font-size: 11px; text-align: center; }
+.subject-status { position: absolute; z-index: 3; left: 50%; top: 50%; width: max-content; max-width: 80%; margin: 0; padding: 8px 13px; color: var(--coffee); background: rgba(255,253,248,.92); border: 1px solid var(--line); border-radius: var(--control-radius); transform: translate(-50%,-50%); font-size: 11px; text-align: center; }
 .preview-tape { position: absolute; top: -13px; left: 38%; width: 90px; height: 27px; background: rgba(246,216,222,.86); transform: rotate(2deg); }
-.preview-copy h2 { max-width: 10ch; margin: 0; color: var(--rose-dark); font-family: "Iowan Old Style", Baskerville, Georgia, serif; font-size: clamp(36px, 4.2vw, 58px); font-weight: 600; line-height: 1.06; letter-spacing: -.045em; }
+.preview-copy h2 { max-width: 10ch; margin: 0; color: var(--coffee); font-family: "Iowan Old Style", Baskerville, Georgia, serif; font-size: clamp(36px, 4.2vw, 58px); font-weight: 600; line-height: 1.06; letter-spacing: -.045em; }
 .preview-copy > p:not(.eyebrow) { max-width: 34ch; margin: 18px 0 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
 .preview-copy .button-row { justify-content: flex-start; }
 
@@ -193,9 +194,9 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
 .printing-actions { flex: 0 0 auto; width: min(620px, 100%); margin-top: 2px; text-align: center; }
 .printing-scene.is-complete .printing-status, .printing-scene.is-complete .printing-actions { position: relative; top: -10px; }
 .printing-actions .button-row { margin-top: 14px; }
-.printing-actions > p { margin: 0; color: var(--rose-dark); font-family: "Iowan Old Style", Baskerville, Georgia, serif; font-size: clamp(24px, 3vw, 34px); }
+.printing-actions > p { margin: 0; color: var(--coffee); font-family: "Iowan Old Style", Baskerville, Georgia, serif; font-size: clamp(24px, 3vw, 34px); }
 
-.drop-zone { position: fixed; z-index: 40; inset: 18px; display: grid; place-items: center; border: 2px dashed var(--rose); border-radius: var(--surface-radius); color: var(--rose-dark); background: rgba(255,253,248,.88); backdrop-filter: blur(8px); font-weight: 700; }
+.drop-zone { position: fixed; z-index: 40; inset: 18px; display: grid; place-items: center; border: 2px dashed var(--rose); border-radius: var(--surface-radius); color: var(--coffee); background: rgba(255,253,248,.88); backdrop-filter: blur(8px); font-weight: 700; }
 .toast { position: fixed; z-index: 50; left: 50%; bottom: 24px; max-width: calc(100vw - 32px); padding: 11px 17px; border-radius: var(--control-radius); color: #fffaf8; background: var(--rose-dark); box-shadow: 0 10px 28px rgba(55,35,40,.18); transform: translateX(-50%); font-size: 12px; }
 
 @keyframes typeReceiptContent { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
