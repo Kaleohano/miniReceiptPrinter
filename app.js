@@ -179,7 +179,7 @@ function setPhoto(url, dimensions, processing = false) {
     els.subjectStatus.hidden = false;
     els.subjectStatus.textContent = '正在识别照片主体';
     $('#makeReceiptButton').disabled = false;
-    els.photoMeta.textContent = `${dimensions}，正在本地制作贴纸，可以先开始打印。`;
+    els.photoMeta.textContent = `${dimensions}，正在本地制作最终贴纸。`;
   } else {
     finishPhotoProcessing(true);
   }
@@ -301,8 +301,24 @@ function weatherName(code) {
 }
 
 async function makeReceipt() {
+  const makeButton = $('#makeReceiptButton');
+  const chooseButton = $('#chooseAgainButton');
+  const originalButtonLabel = makeButton.textContent;
+  makeButton.disabled = true; chooseButton.disabled = true;
+  makeButton.textContent = '正在准备最终贴纸';
+  els.subjectStatus.hidden = false;
+  els.subjectStatus.textContent = '正在完成照片的最终效果';
+  try {
+    await (state.processingPromise || Promise.resolve());
+  } finally {
+    makeButton.textContent = originalButtonLabel;
+    makeButton.disabled = false; chooseButton.disabled = false;
+  }
+  if (!state.imageUrl) { toast('照片还没有准备好，请重新选择'); return; }
+
+  state.lockedImageUrl = state.imageUrl;
+  els.receiptPhoto.src = state.lockedImageUrl;
   showOnly('printing'); playClick(120, .12);
-  state.lockedImageUrl = '';
   els.printing.classList.remove('is-complete');
   els.printingActions.hidden = true;
   els.typedReceipt.classList.remove('is-printing', 'is-printed');
@@ -346,11 +362,8 @@ async function makeReceipt() {
   void els.typedReceipt.offsetWidth;
   els.typedReceipt.classList.add('is-printing');
   const minimumPrint = new Promise(resolve => setTimeout(resolve, reduceMotion ? 80 : 1750));
-  const processing = state.processingPromise || Promise.resolve();
-  await Promise.all([minimumPrint, processing.catch(() => {})]);
-  state.lockedImageUrl = state.imageUrl;
-  els.receiptPhoto.src = state.lockedImageUrl;
-  clearInterval(timer); clearInterval(keyTimer); activeKey?.classList.remove('pressed'); els.typewriter.classList.remove('is-typing'); els.carriage.classList.remove('is-returning');
+  await minimumPrint;
+  clearInterval(timer); clearInterval(keyTimer); keys.forEach(key => key.classList.remove('pressed')); activeKey = null; els.typewriter.classList.remove('is-typing'); els.carriage.classList.remove('is-returning');
   els.carriage.style.removeProperty('--carriage-x'); els.typedReceipt.classList.remove('is-printing'); els.typedReceipt.classList.add('is-printed');
   els.printing.classList.add('is-complete'); els.printingStatus.textContent = '正在准备保存图片';
   try { state.exportBlob = await renderReceiptBlob(); } catch (_) { state.exportBlob = null; }
@@ -461,7 +474,7 @@ function reset() {
   state.processingId += 1; state.imageUrl = ''; state.exportBlob = null; state.location = '此刻所在的地方'; state.weather = '天气未记录';
   if (state.objectUrl) URL.revokeObjectURL(state.objectUrl);
   if (state.stickerUrl) URL.revokeObjectURL(state.stickerUrl);
-  state.objectUrl = null; state.stickerUrl = '';
+  state.objectUrl = null; state.stickerUrl = ''; state.processingPromise = null; state.lockedImageUrl = '';
   els.file.value = ''; showOnly('upload');
 }
 

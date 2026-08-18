@@ -181,6 +181,15 @@ button:focus-visible { outline: 3px solid rgba(191,83,107,.28); outline-offset: 
 .typewriter-model.is-typing .model-paper { animation: paperFeed 1.65s steps(5,end) both; }
 .printing-status { flex: 0 0 auto; min-height: 22px; margin: 0; padding: 4px 11px; color: var(--muted); background: rgba(255,253,248,.7); font-size: 12px; animation: blink 1.1s ease-in-out infinite; }
 .printing-scene.is-complete .printing-status { animation: none; }
+.printing-scene.is-complete .model-key,
+.printing-scene.is-complete .model-carriage,
+.printing-scene.is-complete .ribbon-spool,
+.printing-scene.is-complete .type-guide,
+.printing-scene.is-complete .model-paper {
+  animation: none !important;
+  transition: none !important;
+}
+.printing-scene.is-complete .model-key { transform: none; }
 .printing-actions { flex: 0 0 auto; width: min(620px, 100%); margin-top: 2px; text-align: center; }
 .printing-scene.is-complete .printing-status, .printing-scene.is-complete .printing-actions { position: relative; top: -10px; }
 .printing-actions .button-row { margin-top: 14px; }
